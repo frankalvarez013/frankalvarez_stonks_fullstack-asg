@@ -27,10 +27,12 @@ export default function RootLayout({ children, params: { lng } }) {
   return (
     <html lang={lng} dir={dir(lng)} className={inter.className}>
       <body className="bg-background text-foreground">
-        <main className="min-h-screen flex flex-col items-center">
+        <main className="min-h-screen flex flex-col h-full">
           <Header></Header>
           <SideBar></SideBar>
-          <div className="flex-1">{children}</div>
+          <div className="flex flex-1 ml-60 mt-12 overflow-auto h-full p-4">
+            <div className="flex flex-1">{children}</div>
+          </div>
           <Footer lng={lng}></Footer>
         </main>
       </body>
