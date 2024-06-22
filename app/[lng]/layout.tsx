@@ -1,10 +1,15 @@
-import { GeistSans } from "geist/font/sans";
 import "../globals.css";
 import { dir } from "i18next";
 import { languages } from "../i18n/settings";
-import Header from "../../components/Header";
-import { Footer } from "../../components/Footer";
-
+import Header from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import SideBar from "@/components/SideBar";
+import { Inter } from "next/font/google";
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+});
+console.log(inter);
 export async function generateStaticParams() {
   return languages.map((lng) => ({ lng }));
 }
@@ -20,11 +25,12 @@ export const metadata = {
 
 export default function RootLayout({ children, params: { lng } }) {
   return (
-    <html lang={lng} dir={dir(lng)} className={GeistSans.className}>
+    <html lang={lng} dir={dir(lng)} className={inter.className}>
       <body className="bg-background text-foreground">
         <main className="min-h-screen flex flex-col items-center">
           <Header></Header>
-          {children}
+          <SideBar></SideBar>
+          <div className="flex-1">{children}</div>
           <Footer lng={lng}></Footer>
         </main>
       </body>

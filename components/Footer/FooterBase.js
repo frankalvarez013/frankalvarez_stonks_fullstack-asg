@@ -4,7 +4,7 @@ import { languages } from "../../app/i18n/settings";
 
 export const FooterBase = ({ t, lng }) => {
   return (
-    <footer style={{ marginTop: 50 }}>
+    <footer className="mt-50 bg-[#FF9B0F]">
       <Trans i18nKey="languageSwitcher" t={t}>
         Switch from <strong>{{ lng }}</strong> to:{" "}
       </Trans>
