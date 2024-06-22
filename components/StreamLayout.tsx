@@ -1,10 +1,11 @@
-import "../globals.css";
+import "../app/globals.css";
 import { dir } from "i18next";
-import { languages } from "../i18n/settings";
+import { languages } from "../app/i18n/settings";
 import Header from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import SideBar from "@/components/SideBar";
 import { Inter } from "next/font/google";
+import ChatBar from "./ChatBar";
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
@@ -30,10 +31,10 @@ export default function RootLayout({ children, params: { lng } }) {
         <main className="min-h-screen flex flex-col h-full">
           <Header></Header>
           <SideBar></SideBar>
+          <ChatBar></ChatBar>
           <div className="flex flex-1 ml-60 mt-12 overflow-auto h-full p-4">
             <div className="flex flex-1">{children}</div>
           </div>
-          <Footer lng={lng}></Footer>
         </main>
       </body>
     </html>

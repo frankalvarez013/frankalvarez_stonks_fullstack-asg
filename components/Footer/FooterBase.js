@@ -18,6 +18,11 @@ export const FooterBase = ({ t, lng }) => {
             </span>
           );
         })}
+      <br />
+
+      <Link href={`/${lng}/username`}>{t("to-second-page")}</Link>
+      <br />
+      <Link href={`/${lng}/client-page`}>{t("to-client-page")}</Link>
     </footer>
   );
 };

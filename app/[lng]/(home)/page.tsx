@@ -1,9 +1,9 @@
 import { createClient } from "@/utils/supabase/server";
-import { useTranslation } from "../i18n";
+import { useTranslation } from "../../i18n";
 import Link from "next/link";
 import PreviewUser from "@/components/PreviewUser";
 import Image from "next/image";
-import Illustration from "../../public/IllustrationInvest.svg";
+import Illustration from "../../../public/IllustrationInvest.svg";
 export default async function Index({ params: { lng } }) {
   const { t } = await useTranslation(lng);
   const supabase = createClient();
@@ -29,8 +29,6 @@ export default async function Index({ params: { lng } }) {
         ></Image>
       </div>
       <PreviewUser></PreviewUser>
-      <Link href={`/${lng}/username`}>{t("to-second-page")}</Link>
-      <Link href={`/${lng}/client-page`}>{t("to-client-page")}</Link>
     </div>
   );
 }
