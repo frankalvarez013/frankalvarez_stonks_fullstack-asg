@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
-import ChatBar from "@/components/ChatBar";
 import defAvatar from "../../../../public/defAvatar.svg";
 import Image from "next/image";
 export default async function Streaming({
@@ -32,9 +31,15 @@ export default async function Streaming({
       </>
     );
   }
+  //80%
   return (
     <div className="w-full">
-      <div className="h-[80%] bg-slate-500">Video</div>
+      <div className="w-full h-[calc(80vw/2)] bg-slate-500">
+        <iframe
+          src="https://www.youtube.com/embed/jfKfPfyJRdk"
+          className=" w-full h-full object-cover"
+        ></iframe>
+      </div>
       <div className="flex w-full items-center justify-between gap-2 mt-2">
         <div className="flex gap-2">
           <div className="w-14">

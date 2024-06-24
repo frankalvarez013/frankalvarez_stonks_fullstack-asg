@@ -14,6 +14,10 @@ module.exports = {
           "background-hover": "hsl(var(--btn-background-hover))",
         },
       },
+      spacing: {
+        "aspect-16-9": "56.25%", // (9/16)*100%
+        "aspect-4-3": "75%", // (3/4)*100%
+      },
     },
   },
   plugins: [],
