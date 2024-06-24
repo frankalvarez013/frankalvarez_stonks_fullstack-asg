@@ -14,10 +14,9 @@ export default function Message({ message }: { message: Imessage }) {
         ></Image>
       </div>
       <div className="flex-1">
-        <div className="flex items-center gap-1">
+        <div className="flex flex-col ">
           <h1 className="font-bold text-nowrap">{message.users?.name}</h1>
-          <br />
-          <h1 className="text-sm text-gray-400">
+          <h1 className="text-xs font-light text-gray-400">
             {new Date(message.created_at).toDateString()}
           </h1>
         </div>

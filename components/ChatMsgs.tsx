@@ -8,17 +8,28 @@ export default function ChatMsgs() {
   const scrollRef = useRef() as React.MutableRefObject<HTMLDivElement>;
   const { messages, addMessage, optimisticIds } = useMessage((state) => state);
   const supabase = createClient();
-  const pathname = usePathname();
-  console.log("Listing Channel Name: ", pathname);
+  const pathnameList = usePathname();
+  const pathname = pathnameList!.substring(pathnameList!.lastIndexOf("/") + 1);
+
+  console.log("Listing Channel Name: |" + pathname);
 
   useEffect(() => {
     const channel = supabase
       .channel(`${pathname} stream`)
       .on(
         "postgres_changes",
-        { event: "INSERT", schema: "public", table: "messages" },
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "messages",
+        },
+
         async (payload) => {
-          if (!optimisticIds.includes(payload.new.id)) {
+          console.log("checking?");
+          if (
+            !optimisticIds.includes(payload.new.id) &&
+            payload.new.sent_from === pathname
+          ) {
             console.log("Change received!", payload);
             const { error, data } = await supabase
               .from("users")
