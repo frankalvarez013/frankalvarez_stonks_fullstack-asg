@@ -31,7 +31,7 @@ export default function RootLayout({ children, params: { lng } }) {
           <Header lng={lng}></Header>
           <SideBar></SideBar>
           <div className="flex flex-1 ml-60 mt-12 overflow-auto h-full p-4">
-            <div className="flex flex-1">{children}</div>
+            <div className="flex flex-1 w-full">{children}</div>
           </div>
           <Footer lng={lng}></Footer>
         </main>

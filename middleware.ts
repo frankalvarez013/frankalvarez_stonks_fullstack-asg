@@ -3,13 +3,25 @@ import { NextResponse } from "next/server";
 import acceptLanguage from "accept-language";
 import { fallbackLng, languages, cookieName } from "./app/i18n/settings";
 import { updateSession } from "@/utils/supabase/middleware";
+import { createClient } from "@/utils/supabase/server";
 acceptLanguage.languages(languages);
 
 export async function middleware(req: NextRequest) {
+  const supabase = createClient();
+  let reqPath = req.nextUrl.pathname;
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (user) {
+    if (!user.user_metadata.username) {
+      console.log("wtf");
+      reqPath = "/SetUp";
+    }
+  }
   const isRedirect = req.headers.has("referer");
   const requestHeaders = new Headers(req.headers);
-  console.log("middleware path: ", req.nextUrl.pathname);
-  requestHeaders.set("x-pathname", req.nextUrl.pathname);
+  console.log("middleware path: ", reqPath);
+  requestHeaders.set("x-pathname", reqPath);
   console.log("middleware obje: ", requestHeaders.get("x-pathname"));
   // Determine if the request is a navigation/link/href call
   console.log(
@@ -46,9 +58,7 @@ export async function middleware(req: NextRequest) {
       !req.nextUrl.pathname.startsWith("/_next")
     ) {
       console.log("brooo", lng, req.nextUrl.pathname, req.url);
-      return NextResponse.redirect(
-        new URL(`/${lng}${req.nextUrl.pathname}`, req.url)
-      );
+      return NextResponse.redirect(new URL(`/${lng}${reqPath}`, req.url));
     }
 
     if (req.headers.has("referer")) {

@@ -1,17 +1,23 @@
 import { createClient } from "@/utils/supabase/server";
 import { useTranslation } from "../../i18n";
-import Link from "next/link";
+import EmblaCarousel from "../../../components/EmblaCarousel";
+import "./embla.css";
 import PreviewUser from "@/components/PreviewUser";
 import Image from "next/image";
 import Illustration from "../../../public/IllustrationInvest.svg";
+
+const OPTIONS = { align: "start" };
+const SLIDE_COUNT = 6;
+const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
+
 export default async function Index({ params: { lng } }) {
   const { t } = await useTranslation(lng);
   const supabase = createClient();
-  const { data: notes, error } = await supabase.from("notes").select();
+  // const { data: notes, error } = await supabase.from("notes").select();
 
-  if (error) {
-    return <pre>Error fetching notes: {error.message}</pre>;
-  }
+  // if (error) {
+  //   return <pre>Error fetching notes: {error.message}</pre>;
+  // }
   return (
     <div className="w-full h-full">
       {/* <h1>{t("title")}</h1> */}
@@ -27,7 +33,9 @@ export default async function Index({ params: { lng } }) {
           className="w-1/4 flex-grow max-w-96 min-w-96"
         ></Image>
       </div>
-      <PreviewUser></PreviewUser>
+      <div className="w-full">
+        <EmblaCarousel slides={SLIDES} options={OPTIONS} />
+      </div>
     </div>
   );
 }
