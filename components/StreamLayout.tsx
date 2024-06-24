@@ -5,12 +5,12 @@ import Header from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import SideBar from "@/components/SideBar";
 import { Inter } from "next/font/google";
-import ChatBar from "./ChatBar";
+import ChatBar from "./ChatSection";
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
 });
-console.log(inter);
+// console.log(inter);
 export async function generateStaticParams() {
   return languages.map((lng) => ({ lng }));
 }

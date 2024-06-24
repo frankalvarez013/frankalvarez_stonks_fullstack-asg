@@ -10,7 +10,6 @@ export default async function Index({ params: { lng } }) {
   const { data: notes, error } = await supabase.from("notes").select();
 
   if (error) {
-    console.error("Error fetching notes:", error);
     return <pre>Error fetching notes: {error.message}</pre>;
   }
   return (

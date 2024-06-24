@@ -23,7 +23,7 @@ export default async function Streaming({
     }
     retrieveSession();
   }, []);
-  console.log(userData);
+  // console.log(userData);
   if (userData != null) {
     return (
       <>

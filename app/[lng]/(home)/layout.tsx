@@ -9,7 +9,7 @@ const inter = Inter({
   subsets: ["latin"],
   display: "swap",
 });
-console.log(inter);
+// console.log(inter);
 export async function generateStaticParams() {
   return languages.map((lng) => ({ lng }));
 }
@@ -28,7 +28,7 @@ export default function RootLayout({ children, params: { lng } }) {
     <html lang={lng} dir={dir(lng)} className={inter.className}>
       <body className="bg-background text-foreground">
         <main className="min-h-screen flex flex-col h-full">
-          <Header></Header>
+          <Header lng={lng}></Header>
           <SideBar></SideBar>
           <div className="flex flex-1 ml-60 mt-12 overflow-auto h-full p-4">
             <div className="flex flex-1">{children}</div>

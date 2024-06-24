@@ -5,43 +5,68 @@ import { fallbackLng, languages, cookieName } from "./app/i18n/settings";
 import { updateSession } from "@/utils/supabase/middleware";
 acceptLanguage.languages(languages);
 
-export async function middleware(req) {
-  let lng;
-  if (req.cookies.has(cookieName) && req.cookies.get(cookieName).value)
-    lng = acceptLanguage.get(req.cookies.get(cookieName).value);
-  // console.log("cookie: ",acceptLanguage.get(req.cookies.get(cookieName).value))
-  // console.log("FIRST lng:",lng)
-
-  if (!lng) lng = acceptLanguage.get(req.headers.get("Accept-Language"));
-  // console.log("accept-lang: ",acceptLanguage.get(req.headers.get('Accept-Language')))
-  // console.log("MIDDLE lng: ",lng)
-
-  if (!lng) lng = fallbackLng;
-  // console.log("LAST lng: ",lng)
-  // console.log('..........................')
-  // Redirect if lng in path is not supported
-  if (
-    !languages.some((loc) => req.nextUrl.pathname.startsWith(`/${loc}`)) &&
-    !req.nextUrl.pathname.startsWith("/_next")
-  ) {
-    console.log("brooo", lng, req.nextUrl.pathname, req.url);
-    return NextResponse.redirect(
-      new URL(`/${lng}${req.nextUrl.pathname}`, req.url)
+export async function middleware(req: NextRequest) {
+  const isRedirect = req.headers.has("referer");
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.set("x-pathname", req.nextUrl.pathname);
+  // Determine if the request is a navigation/link/href call
+  const isNavigationRequest =
+    !isRedirect && req.method === "GET" && !req.url.includes(`code`);
+  if (isNavigationRequest) {
+    console.log("LINK OR HREF ENCOUNTERED...");
+    let lng;
+    if (req.cookies.has(cookieName) && req.cookies.get(cookieName)?.value)
+      lng = acceptLanguage.get(req.cookies.get(cookieName)?.value);
+    console.log(
+      "cookie: ",
+      acceptLanguage.get(req.cookies.get(cookieName)?.value)
     );
-  }
+    console.log("FIRST lng:", lng);
 
-  if (req.headers.has("referer")) {
-    const refererUrl = new URL(req.headers.get("referer"));
-    const lngInReferer = languages.find((l) =>
-      refererUrl.pathname.startsWith(`/${l}`)
+    if (!lng) lng = acceptLanguage.get(req.headers.get("Accept-Language"));
+    console.log(
+      "accept-lang: ",
+      acceptLanguage.get(req.headers.get("Accept-Language"))
     );
-    const response = NextResponse.next();
-    if (lngInReferer) response.cookies.set(cookieName, lngInReferer);
-    return response;
-  }
-  // return await updateSession(req);
+    console.log("MIDDLE lng: ", lng);
 
-  return NextResponse.next();
+    if (!lng) lng = fallbackLng;
+    console.log("LAST lng: ", lng);
+    console.log("..........................");
+    // Redirect if lng in path is not supported
+    if (
+      !languages.some((loc) => req.nextUrl.pathname.startsWith(`/${loc}`)) &&
+      !req.nextUrl.pathname.startsWith("/_next")
+    ) {
+      console.log("brooo", lng, req.nextUrl.pathname, req.url);
+      return NextResponse.redirect(
+        new URL(`/${lng}${req.nextUrl.pathname}`, req.url)
+      );
+    }
+
+    if (req.headers.has("referer")) {
+      const refererUrl = new URL(req.headers.get("referer"));
+      const lngInReferer = languages.find((l) =>
+        refererUrl.pathname.startsWith(`/${l}`)
+      );
+      const response = NextResponse.next({
+        request: {
+          headers: requestHeaders,
+        },
+      });
+      if (lngInReferer) response.cookies.set(cookieName, lngInReferer);
+      return response;
+    }
+    // return await updateSession(req);
+
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
+  } else {
+    return await updateSession(req);
+  }
 }
 
 export const config = {
