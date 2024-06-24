@@ -8,10 +8,17 @@ acceptLanguage.languages(languages);
 export async function middleware(req: NextRequest) {
   const isRedirect = req.headers.has("referer");
   const requestHeaders = new Headers(req.headers);
+  console.log("middleware path: ", req.nextUrl.pathname);
   requestHeaders.set("x-pathname", req.nextUrl.pathname);
+  console.log("middleware obje: ", requestHeaders.get("x-pathname"));
   // Determine if the request is a navigation/link/href call
-  const isNavigationRequest =
-    !isRedirect && req.method === "GET" && !req.url.includes(`code`);
+  console.log(
+    "checking... mid...",
+    !isRedirect,
+    req.method === "GET",
+    !req.url.includes(`code`)
+  );
+  const isNavigationRequest = req.method === "GET" && !req.url.includes(`code`);
   if (isNavigationRequest) {
     console.log("LINK OR HREF ENCOUNTERED...");
     let lng;
@@ -49,6 +56,7 @@ export async function middleware(req: NextRequest) {
       const lngInReferer = languages.find((l) =>
         refererUrl.pathname.startsWith(`/${l}`)
       );
+      console.log("Referer");
       const response = NextResponse.next({
         request: {
           headers: requestHeaders,
@@ -58,13 +66,14 @@ export async function middleware(req: NextRequest) {
       return response;
     }
     // return await updateSession(req);
-
+    console.log("refresH?");
     return NextResponse.next({
       request: {
         headers: requestHeaders,
       },
     });
   } else {
+    console.log("huh");
     return await updateSession(req);
   }
 }

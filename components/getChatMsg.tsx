@@ -8,8 +8,7 @@ export default async function getChatMsg() {
   const heads = headers();
   const pathnameList = heads.get("x-pathname");
   console.log("checking url", pathnameList);
-  const pathname = "Frankie";
-  // const pathname = pathnameList.substring(pathnameList.lastIndexOf("/") + 1) || Fra;
+  const pathname = pathnameList!.substring(pathnameList!.lastIndexOf("/") + 1);
   console.log("wait", pathname);
   const { data } = await supabase
     .from("messages")
