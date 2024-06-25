@@ -9,13 +9,6 @@ export default function SetUpForm() {
   const [liveEmail, setLiveEmail] = useState(true);
   const [liveNotif, setLiveNotif] = useState(true);
   const user = useUser((state) => state.user);
-  useEffect(() => {
-    const val = async () => {
-      const BRO = await supabase.auth.getUser();
-      console.log(BRO);
-    };
-    val();
-  }, []);
   const router = useRouter();
   const handleChange = (e) => {
     setUserName(e.target.value);
