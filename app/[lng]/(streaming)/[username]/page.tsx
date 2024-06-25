@@ -23,14 +23,6 @@ export default async function Streaming({
     retrieveSession();
   }, []);
   // console.log(userData);
-  if (userData != null) {
-    return (
-      <>
-        <h1>Not Connected broski !</h1>
-        <Link href={`/${params.lng}`}>second page</Link>
-      </>
-    );
-  }
   //80%
   return (
     <div className="w-full">
@@ -51,6 +43,7 @@ export default async function Streaming({
             <div className="text-sm">TYPE STREAM</div>
           </div>
         </div>
+        {userData && <h1>lmao</h1>}
         <div>
           <button
             onClick={() => {

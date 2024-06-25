@@ -17,5 +17,5 @@ export async function GET(request: Request) {
   console.log("outheerr?");
 
   // URL to redirect to after sign up process completes
-  return NextResponse.redirect(`${origin}/`);
+  return NextResponse.redirect(`${origin}/bobo`);
 }
