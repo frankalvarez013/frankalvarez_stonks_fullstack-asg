@@ -44,7 +44,11 @@ export default async function Streaming({
           </div>
           <Stream StreamerInfo={streamerInfo}></Stream>
         </div>
-        {data ? <InitUser user={data.session?.user}></InitUser> : <></>}
+        {data.session?.user ? (
+          <InitUser user={data.session?.user}></InitUser>
+        ) : (
+          <>hi</>
+        )}
       </>
     );
   }
