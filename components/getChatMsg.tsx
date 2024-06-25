@@ -8,11 +8,14 @@ export default async function getChatMsg() {
   const heads = headers();
   const pathnameList = heads.get("x-pathname");
   const pathname = pathnameList!.substring(pathnameList!.lastIndexOf("/") + 1);
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("messages")
     .select("*,users(*)")
     .eq("sent_from", pathname);
   console.log("Chat Messages: ", data);
+  if (error) {
+    console.error("Chat msgs did not go thru", error, pathname, data);
+  }
   return (
     <Suspense fallback={"loading..."}>
       <ChatMsg></ChatMsg>
