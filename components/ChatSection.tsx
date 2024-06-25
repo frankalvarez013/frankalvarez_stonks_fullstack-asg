@@ -4,7 +4,7 @@ import { createClient } from "../utils/supabase/server";
 import InitUser from "@/store/initUser";
 export default async function ChatSection() {
   const supabase = createClient();
-  const { data } = await supabase.auth.getUser();
+  const { data } = await supabase.auth.getSession();
   return (
     <>
       <div
@@ -21,7 +21,7 @@ export default async function ChatSection() {
           </div>
         </div>
       </div>
-      <InitUser user={data.user}></InitUser>
+      <InitUser user={data.session?.user}></InitUser>
     </>
   );
 }

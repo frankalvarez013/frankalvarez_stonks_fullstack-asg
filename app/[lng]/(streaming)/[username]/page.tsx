@@ -8,7 +8,7 @@ export default async function Streaming({
   params: { username: string; lng: string };
 }) {
   const supabase = createClient();
-  const { data } = await supabase.auth.getUser();
+  const { data } = await supabase.auth.getSession();
 
   let streamerInfo = null;
   const getUserByUsername = async (username) => {
@@ -44,7 +44,7 @@ export default async function Streaming({
           </div>
           <Stream StreamerInfo={streamerInfo}></Stream>
         </div>
-        {data ? <InitUser user={data.user}></InitUser> : <></>}
+        {data ? <InitUser user={data.session?.user}></InitUser> : <></>}
       </>
     );
   }

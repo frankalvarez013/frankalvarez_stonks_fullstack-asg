@@ -18,8 +18,8 @@ export default async function Index({ params: { lng } }) {
   // if (error) {
   //   return <pre>Error fetching notes: {error.message}</pre>;
   // }
-  const { data } = await supabase.auth.getUser();
-  if (data.user) {
+  const { data } = await supabase.auth.getSession();
+  if (data.session?.user) {
     return (
       <div className="w-full h-full">
         {/* <h1>{t("title")}</h1> */}
@@ -37,7 +37,7 @@ export default async function Index({ params: { lng } }) {
         </div>
         <div className="w-full">
           <EmblaCarousel slides={SLIDES} options={OPTIONS} />
-          <InitUser user={data.user}></InitUser>
+          <InitUser user={data.session?.user}></InitUser>
         </div>
         <HomePresence />
       </div>
