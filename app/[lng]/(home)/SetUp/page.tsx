@@ -7,7 +7,7 @@ export default async function SetUp() {
   console.log("AUTH - GeT USER", data, error);
   return (
     <div className="min-h-screen w-full flex items-center justify-center ">
-      <SetUpForm></SetUpForm>
+      <SetUpForm user={data.user}></SetUpForm>
       <InitUser user={data.user}></InitUser>
     </div>
   );
