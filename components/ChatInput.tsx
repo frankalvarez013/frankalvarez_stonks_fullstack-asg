@@ -11,7 +11,6 @@ export default function ChatInput() {
   const setOptimisticIds = useMessage((state) => state.setOptimisticIds);
   const pathname = usePathname();
   const sent_from = pathname.substring(pathname.lastIndexOf("/") + 1);
-  console.log("Creating From... ", pathname);
   const supabase = createClient();
   const handleSendMessage = async (text: string) => {
     if (text.trim()) {

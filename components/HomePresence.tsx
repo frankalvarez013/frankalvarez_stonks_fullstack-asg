@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 export default function HomePresence() {
   const supabase = createClient();
   const user = useUser((state) => state.user);
-  console.log("Exqueze me");
+  console.log("In Presence");
   const [onlineUser, setOnlineUser] = useState(0);
   useEffect(() => {
     const channel = supabase.channel("streamer_channel");
@@ -32,7 +32,7 @@ export default function HomePresence() {
     });
   }, [user]);
   if (!user) {
-    console.log("hi");
+    console.log("no user...");
     return <></>;
   }
   return <div>HI</div>;
