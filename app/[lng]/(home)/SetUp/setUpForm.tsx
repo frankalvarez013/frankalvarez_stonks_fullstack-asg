@@ -17,7 +17,7 @@ export default function SetUpForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(userName, liveEmail, liveNotif);
-    console.log(supabase);
+    console.log("hey", supabase);
     if (user?.id) {
       console.log("attempting update...");
       const { error } = await supabase

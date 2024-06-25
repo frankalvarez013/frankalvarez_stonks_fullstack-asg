@@ -4,7 +4,6 @@ import acceptLanguage from "accept-language";
 import { fallbackLng, languages, cookieName } from "./app/i18n/settings";
 import { updateSession } from "@/utils/supabase/middleware";
 import { createClient } from "@/utils/supabase/server";
-import { useRouter } from "next/router";
 
 acceptLanguage.languages(languages);
 
