@@ -52,7 +52,13 @@ export default async function Streaming({
           </div>
         </div>
         <div>
-          <button>Follow</button>
+          <button
+            onClick={() => {
+              console.log("BLEH");
+            }}
+          >
+            Follow
+          </button>
         </div>
       </div>
     </div>

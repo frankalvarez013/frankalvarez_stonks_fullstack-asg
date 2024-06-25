@@ -4,60 +4,63 @@ import acceptLanguage from "accept-language";
 import { fallbackLng, languages, cookieName } from "./app/i18n/settings";
 import { updateSession } from "@/utils/supabase/middleware";
 import { createClient } from "@/utils/supabase/server";
+import { useRouter } from "next/router";
+
 acceptLanguage.languages(languages);
 
 export async function middleware(req: NextRequest) {
+  const elm = await updateSession(req);
   const supabase = createClient();
   let reqPath = req.nextUrl.pathname;
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (user) {
-    if (!user.user_metadata.username) {
-      console.log("wtf");
-      reqPath = "/SetUp";
+    const { data, error } = await supabase
+      .from("users")
+      .select()
+      .eq("id", user.id)
+      .single();
+    // console.log("Username: ", data?.username);
+    if (data) {
+      if (!data.username) {
+        // console.log("changed path to /SetUp");
+        reqPath = "/SetUp";
+      }
     }
   }
   const isRedirect = req.headers.has("referer");
   const requestHeaders = new Headers(req.headers);
-  console.log("middleware path: ", reqPath);
   requestHeaders.set("x-pathname", reqPath);
-  console.log("middleware obje: ", requestHeaders.get("x-pathname"));
   // Determine if the request is a navigation/link/href call
-  console.log(
-    "checking... mid...",
-    !isRedirect,
-    req.method === "GET",
-    !req.url.includes(`code`)
-  );
+  // console.log(
+  //   "checking... middleware...",
+  //   !isRedirect,
+  //   req.method === "GET",
+  //   !req.url.includes(`code`)
+  // );
   const isNavigationRequest = req.method === "GET" && !req.url.includes(`code`);
   if (isNavigationRequest) {
-    console.log("LINK OR HREF ENCOUNTERED...");
+    // console.log("LINK OR HREF ENCOUNTERED...");
     let lng;
     if (req.cookies.has(cookieName) && req.cookies.get(cookieName)?.value)
       lng = acceptLanguage.get(req.cookies.get(cookieName)?.value);
-    console.log(
-      "cookie: ",
-      acceptLanguage.get(req.cookies.get(cookieName)?.value)
-    );
-    console.log("FIRST lng:", lng);
 
     if (!lng) lng = acceptLanguage.get(req.headers.get("Accept-Language"));
-    console.log(
-      "accept-lang: ",
-      acceptLanguage.get(req.headers.get("Accept-Language"))
-    );
-    console.log("MIDDLE lng: ", lng);
 
     if (!lng) lng = fallbackLng;
-    console.log("LAST lng: ", lng);
-    console.log("..........................");
+    // console.log("..........................");
     // Redirect if lng in path is not supported
     if (
       !languages.some((loc) => req.nextUrl.pathname.startsWith(`/${loc}`)) &&
       !req.nextUrl.pathname.startsWith("/_next")
     ) {
-      console.log("brooo", lng, req.nextUrl.pathname, req.url);
+      // console.log(
+      //   "Doesn't have language at start of page fixin...",
+      //   lng,
+      //   reqPath,
+      //   req.url
+      // );
       return NextResponse.redirect(new URL(`/${lng}${reqPath}`, req.url));
     }
 
@@ -66,7 +69,7 @@ export async function middleware(req: NextRequest) {
       const lngInReferer = languages.find((l) =>
         refererUrl.pathname.startsWith(`/${l}`)
       );
-      console.log("Referer");
+      // console.log("Referer");
       const response = NextResponse.next({
         request: {
           headers: requestHeaders,
@@ -76,14 +79,14 @@ export async function middleware(req: NextRequest) {
       return response;
     }
     // return await updateSession(req);
-    console.log("refresH?");
+    // console.log("Refresh?");
     return NextResponse.next({
       request: {
         headers: requestHeaders,
       },
     });
   } else {
-    console.log("huh");
+    // console.log("Not Sure...");
     return await updateSession(req);
   }
 }
