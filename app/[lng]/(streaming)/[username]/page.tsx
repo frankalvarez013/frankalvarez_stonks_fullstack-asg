@@ -29,7 +29,7 @@ export default async function Streaming({
       streamerInfo = user[0];
     }
   });
-  // console.log("Main Page Streamer:", streamerInfo);
+  console.log("Main Page Streamer:", streamerInfo);
   if (!streamerInfo) {
     <div>loading...</div>;
   } else {

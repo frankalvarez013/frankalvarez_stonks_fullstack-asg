@@ -12,6 +12,7 @@ export default async function getChatMsg() {
     .from("messages")
     .select("*,users(*)")
     .eq("sent_from", pathname);
+  console.log("Chat Messages: ", data);
   return (
     <Suspense fallback={"loading..."}>
       <ChatMsg></ChatMsg>
