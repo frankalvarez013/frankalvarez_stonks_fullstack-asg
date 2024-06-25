@@ -10,6 +10,7 @@ acceptLanguage.languages(languages);
 
 export async function middleware(req: NextRequest) {
   const elm = await updateSession(req);
+  console.log(elm);
   const supabase = createClient();
   let reqPath = req.nextUrl.pathname;
   const {
