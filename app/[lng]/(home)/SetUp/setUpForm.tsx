@@ -3,13 +3,13 @@ import { useUser } from "@/store/user";
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-export default function SetUpForm({ user }) {
+export default function SetUpForm() {
   const supabase = createClient();
   const [userName, setUserName] = useState("");
   const [liveEmail, setLiveEmail] = useState(true);
   const [liveNotif, setLiveNotif] = useState(true);
+  const user = useUser((state) => state.user);
   const router = useRouter();
-  console.log("user:", user);
   const handleChange = (e) => {
     setUserName(e.target.value);
   };
