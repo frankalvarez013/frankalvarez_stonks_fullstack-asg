@@ -32,7 +32,7 @@ export default function RootLayout({ children, params: { lng } }) {
           <Header lng={lng}></Header>
           <SideBar></SideBar>
           <ChatBar></ChatBar>
-          <div className="flex flex-1 ml-60 mr-80 mt-12 overflow-auto h-full p-4">
+          <div className="flex flex-1 lg:ml-60 sm:mr-80 mt-12 overflow-auto h-full p-4">
             <div className="flex flex-1">{children}</div>
           </div>
         </main>

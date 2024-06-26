@@ -30,6 +30,12 @@ export default async function Streaming({
       streamerInfo = user[0];
     }
   });
+  const { data: stream } = await supabase
+    .from("stream")
+    .select("followers")
+    .eq("username", params.username)
+    .single();
+  // console.log("bruh", stream);
   // console.log("Main Page Streamer:", streamerInfo);
   if (!streamerInfo) {
     return (
@@ -58,7 +64,7 @@ export default async function Streaming({
               className="w-full h-full object-cover"
             ></iframe>
           </div>
-          <Stream StreamerInfo={streamerInfo}></Stream>
+          <Stream StreamerInfo={streamerInfo} stream={stream}></Stream>
         </div>
         {data.session?.user ? (
           <InitUser user={data.session?.user}></InitUser>

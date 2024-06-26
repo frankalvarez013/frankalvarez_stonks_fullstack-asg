@@ -27,21 +27,13 @@ export default function ChatInput() {
         error !== null ||
         user === undefined
       ) {
-        console.log("in the hound");
         setChatDisable(false);
       }
-      console.log(
-        "Verify",
-        dataName,
-        error,
-        dataName === null,
-        dataName?.length === 0,
-        error !== null
-      );
-      console.log("chat1", chatDisable);
+
+      // console.log("chat1", chatDisable);
     };
     verifyName();
-    console.log("chat", chatDisable);
+    // console.log("chat", chatDisable);
   }, []);
   const supabase = createClient();
 

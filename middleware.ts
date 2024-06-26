@@ -40,7 +40,7 @@ export async function middleware(req: NextRequest) {
   // );
   const isNavigationRequest = req.method === "GET" && !req.url.includes(`code`);
   if (isNavigationRequest) {
-    // console.log("LINK OR HREF ENCOUNTERED...");
+    console.log("LINK OR HREF ENCOUNTERED...");
     let lng;
     if (req.cookies.has(cookieName) && req.cookies.get(cookieName)?.value)
       lng = acceptLanguage.get(req.cookies.get(cookieName)?.value);
@@ -68,7 +68,7 @@ export async function middleware(req: NextRequest) {
       const lngInReferer = languages.find((l) =>
         refererUrl.pathname.startsWith(`/${l}`)
       );
-      // console.log("Referer");
+      console.log("Referer...");
       const response = NextResponse.next({
         request: {
           headers: requestHeaders,
@@ -78,14 +78,14 @@ export async function middleware(req: NextRequest) {
       return response;
     }
     // return await updateSession(req);
-    // console.log("Refresh?");
+    console.log("Refresh?");
     return NextResponse.next({
       request: {
         headers: requestHeaders,
       },
     });
   } else {
-    // console.log("Not Sure...");
+    console.log("Not Sure...");
     return await updateSession(req);
   }
 }

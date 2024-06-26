@@ -2,23 +2,29 @@ import GetChatMsgs from "./getChatMsg";
 import ChatInput from "./ChatInput";
 import { createClient } from "../utils/supabase/server";
 import InitUser from "@/store/initUser";
+import { headers } from "next/headers";
 export default async function ChatSection() {
   const supabase = createClient();
   const { data } = await supabase.auth.getSession();
-  // const pathname = usePathname();
-  // let userVerified = true;
-  // const sent_from = pathname.substring(pathname.lastIndexOf("/") + 1);
-  // const { data: dataName, error } = await supabase
-  //   .from("stream")
-  //   .select("username")
-  //   .eq("stream_name", sent_from);
-  // if (dataName === undefined || error) {
-  //   userVerified = false;
-  // }
+  const headersList = headers();
+  // console.log("header?", Array.from(headersList.entries()));
+  const pathname = headersList.get("x-pathname");
+  // console.log("hello?", pathname);
+  let userVerified = true;
+  const sent_from = pathname!.substring(pathname!.lastIndexOf("/") + 1);
+  // console.log(sent_from);
+  const { data: dataName, error } = await supabase
+    .from("stream")
+    .select("username")
+    .eq("username", sent_from);
+  if (dataName === undefined || error) {
+    userVerified = false;
+  }
+  // console.log(dataName);
   return (
     <>
       <div
-        className="fixed top-12 right-0 z-40 w-80 h-screen transition-transform translate-x-full sm:translate-x-0"
+        className="fixed lg:top-12 sm:right-0 z-40 sm:w-80 w-full h-1/2 bottom-0 sm:h-screen transition-transform  translate-x-0"
         aria-label="Sidebar"
       >
         <div className="h-full w-full px-3 py-4 overflow-y-auto  bg-[#FF9B0F]">

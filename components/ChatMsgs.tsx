@@ -14,6 +14,7 @@ export default function ChatMsgs() {
   const user = useUser((state) => state.user);
   let chatEnabled = true;
   const [noMsgChat, setNoMsgChat] = useState(false);
+  console.log("my messages should", messages);
   if (messages.length === 0 && user === null) {
     chatEnabled = false;
   }
@@ -24,8 +25,8 @@ export default function ChatMsgs() {
       setNoMsgChat(false);
     }
   }, [messages]);
-  console.log("Listing Channel Name: |" + pathname);
-  console.log("messages: |" + messages);
+  console.log("Path" + pathname);
+  // console.log("messages: |" + messages);
 
   useEffect(() => {
     const channel = supabase

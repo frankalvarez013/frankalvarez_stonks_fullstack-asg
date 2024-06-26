@@ -10,7 +10,7 @@ import Image from "next/image";
 export default function Login({ searchParams }) {
   const signIn = async () => {
     const supabase = createClient();
-    console.log("SIGNING IN OMG");
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {

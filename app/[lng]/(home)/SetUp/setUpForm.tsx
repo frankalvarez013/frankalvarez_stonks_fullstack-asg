@@ -16,10 +16,7 @@ export default function SetUpForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(userName, liveEmail, liveNotif);
-    console.log("hey", supabase);
     if (user?.id) {
-      console.log("attempting update...");
       const { error: error1 } = await supabase
         .from("users")
         .update({
@@ -31,7 +28,6 @@ export default function SetUpForm() {
       if (error1) {
         console.error("Update error:", error1);
       } else {
-        console.log("Update successful");
         router.push("/");
       }
     } else {

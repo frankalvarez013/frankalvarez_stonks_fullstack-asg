@@ -11,7 +11,7 @@ const Switch = ({ StreamerInfo }) => {
       try {
         let data, error;
         if (isChecked) {
-          const response = await supabase
+          const responseStream = await supabase
             .from("stream")
             .update({
               username: StreamerInfo.username,
@@ -19,16 +19,44 @@ const Switch = ({ StreamerInfo }) => {
             })
             .eq("id", StreamerInfo.id)
             .select();
-          data = response.data;
-          error = response.error;
+          data = responseStream.data;
+          error = responseStream.error;
+
+          try {
+            const getFollowers = responseStream.data?.filter(
+              (stream) => stream.username === StreamerInfo.username
+            );
+            if (getFollowers === undefined) {
+              console.log("no stream with the streamer username");
+            } else {
+              const responseStreamPost = await fetch("/api/stream", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  followers: getFollowers[0].followers,
+                  streamerName: StreamerInfo.username,
+                }),
+              });
+              const data = await responseStreamPost.json();
+              if (responseStreamPost.ok) {
+                console.log("API call succeeded", data);
+              } else {
+                console.error("API call failed:", data);
+              }
+            }
+          } catch (error) {
+            console.error("API call failed:", error);
+          }
         } else {
-          const response = await supabase
+          const responseStreamDelete = await supabase
             .from("stream")
             .upsert({ id: StreamerInfo.id, active: false })
             .select();
 
-          data = response.data;
-          error = response.error;
+          data = responseStreamDelete.data;
+          error = responseStreamDelete.error;
         }
 
         if (error) {

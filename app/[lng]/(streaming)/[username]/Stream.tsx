@@ -1,57 +1,73 @@
 "use client";
 import Switch from "@/components/ui/Switch";
 import { useUser } from "@/store/user";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import defAvatar from "../../../../public/defAvatar.svg";
 import Image from "next/image";
 import { createClient } from "@/utils/supabase/client";
 import FollowDialog from "@/components/FollowDialog";
-export default function Stream({ StreamerInfo }) {
+
+export default function Stream({ StreamerInfo, stream }) {
+  const [follow, setFollow] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const user = useUser((state) => state.user);
   const supabase = createClient();
+  const isInitialMount = useRef(true);
   let isStreamer = false;
-  let [isOpen, setIsOpen] = useState(false);
-  const [follow, setFollow] = useState(false);
+
+  useEffect(() => {
+    if (stream.followers && user) {
+      const checkFollow = stream.followers.some(
+        (follower) => follower === user.id
+      );
+      setFollow(checkFollow);
+    }
+  }, [stream.followers, user]);
+
   useEffect(() => {
     const followAdd = async () => {
       try {
-        const data = await supabase
+        const { data, error } = await supabase
           .from("stream")
           .select("followers")
-          .eq("username", [StreamerInfo.username])
+          .eq("username", StreamerInfo.username)
           .single();
-        console.log({ data });
-        const currentFollowers = data!.data!.followers || [];
 
+        if (error) {
+          throw error;
+        }
+
+        const currentFollowers = data.followers || [];
         let updatedFollowers = [];
-        // Now you can use updatedFollowers as needed
+
         if (follow) {
-          console.log("adding...", user!.id);
-
-          updatedFollowers = [...currentFollowers, user!.id];
+          updatedFollowers = [...currentFollowers, user.id];
         } else {
-          console.log("deleting...");
-
           updatedFollowers = currentFollowers.filter(
-            (followerId) => followerId !== user!.id
+            (followerId) => followerId !== user.id
           );
         }
+
         await supabase
           .from("stream")
           .update({ followers: updatedFollowers })
-          .eq("username", [StreamerInfo.username]);
+          .eq("username", StreamerInfo.username);
       } catch (e) {
         console.error(e);
       }
     };
-    followAdd();
-  }, [follow]);
+
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+    } else {
+      followAdd();
+    }
+  }, [follow, user, supabase, StreamerInfo.username]);
 
   if (user?.email?.localeCompare(StreamerInfo.email) === 0) {
     isStreamer = true;
-    console.log("bet");
   }
-  //   console.log(StreamerInfo);
+
   return (
     <div className="flex w-full items-center justify-between gap-2 mt-2">
       <div className="flex gap-2">
@@ -59,7 +75,7 @@ export default function Stream({ StreamerInfo }) {
           <Image alt="Avatar" src={defAvatar} />
         </div>
         <div>
-          <div className="font-bold">{StreamerInfo.title || "My Title"}</div>
+          <div className="font-bold">{StreamerInfo.title || "My Stream"}</div>
           <div className="text-sm">{StreamerInfo.username}</div>
         </div>
       </div>
@@ -74,7 +90,7 @@ export default function Stream({ StreamerInfo }) {
               if (!user || user === undefined) {
                 setIsOpen(true);
               } else {
-                setFollow(!follow);
+                setFollow((prevFollow) => !prevFollow);
               }
             }}
           >
@@ -82,7 +98,17 @@ export default function Stream({ StreamerInfo }) {
           </button>
         </div>
       )}
-      <FollowDialog isOpen={isOpen} setIsOpen={setIsOpen}></FollowDialog>
+      <FollowDialog
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        info={{
+          title: "Hold On!",
+          description: `Please login to follow your favorite Streamer!`,
+          link: "/login",
+          button: "Login",
+          streamCheck: false,
+        }}
+      ></FollowDialog>
     </div>
   );
 }

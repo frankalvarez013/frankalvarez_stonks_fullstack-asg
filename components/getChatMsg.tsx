@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import ChatMsg from "./ChatMsgs";
 import InitMessages from "@/store/InitMessages";
 import { createClient } from "../utils/supabase/server";
@@ -12,6 +12,7 @@ export default async function getChatMsg() {
     .from("messages")
     .select("*,users(*)")
     .eq("sent_from", pathname);
+  console.log(data, pathname);
   if (error) {
     console.error("Chat msgs did not go thru", error, pathname, data);
   }
