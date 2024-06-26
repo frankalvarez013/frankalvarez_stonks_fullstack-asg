@@ -30,7 +30,7 @@ export default async function Streaming({
       streamerInfo = user[0];
     }
   });
-  console.log("Main Page Streamer:", streamerInfo);
+  // console.log("Main Page Streamer:", streamerInfo);
   if (!streamerInfo) {
     return (
       <>
@@ -63,7 +63,7 @@ export default async function Streaming({
         {data.session?.user ? (
           <InitUser user={data.session?.user}></InitUser>
         ) : (
-          <>hi</>
+          <></>
         )}
       </>
     );

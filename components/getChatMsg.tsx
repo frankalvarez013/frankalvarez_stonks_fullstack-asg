@@ -12,7 +12,6 @@ export default async function getChatMsg() {
     .from("messages")
     .select("*,users(*)")
     .eq("sent_from", pathname);
-  console.log("Chat Messages: ", data);
   if (error) {
     console.error("Chat msgs did not go thru", error, pathname, data);
   }

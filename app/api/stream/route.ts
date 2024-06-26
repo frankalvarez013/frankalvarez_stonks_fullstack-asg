@@ -6,6 +6,7 @@ const supabase = createClient();
 export async function POST(request) {
   try {
     console.log("OI");
+    console.error("lemme see");
     const channel = supabase.channel("streamer_channel");
     const { error: subscribeError } = await channel.subscribe();
 

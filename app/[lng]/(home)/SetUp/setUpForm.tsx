@@ -20,7 +20,7 @@ export default function SetUpForm() {
     console.log("hey", supabase);
     if (user?.id) {
       console.log("attempting update...");
-      const { error } = await supabase
+      const { error: error1 } = await supabase
         .from("users")
         .update({
           username: userName,
@@ -28,9 +28,8 @@ export default function SetUpForm() {
           live_notif: liveNotif,
         })
         .eq("id", user.id);
-
-      if (error) {
-        console.error("Update error:", error);
+      if (error1) {
+        console.error("Update error:", error1);
       } else {
         console.log("Update successful");
         router.push("/");
@@ -59,6 +58,8 @@ export default function SetUpForm() {
           Create a Username
         </label>
         <input
+          title="No spaces allowed"
+          pattern="\S+"
           type="text"
           id="name"
           name="name"

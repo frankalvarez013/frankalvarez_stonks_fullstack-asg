@@ -5,17 +5,20 @@ const Switch = ({ StreamerInfo }) => {
   const [isChecked, setIsChecked] = useState(false);
   const supabase = createClient();
   let stream = null;
+
   useEffect(() => {
     const updateStreamStatus = async (isChecked) => {
       try {
         let data, error;
-
         if (isChecked) {
           const response = await supabase
             .from("stream")
-            .upsert({ id: StreamerInfo.id, active: true })
+            .update({
+              username: StreamerInfo.username,
+              active: true,
+            })
+            .eq("id", StreamerInfo.id)
             .select();
-
           data = response.data;
           error = response.error;
         } else {

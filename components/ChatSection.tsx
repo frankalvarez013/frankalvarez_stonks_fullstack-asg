@@ -5,6 +5,16 @@ import InitUser from "@/store/initUser";
 export default async function ChatSection() {
   const supabase = createClient();
   const { data } = await supabase.auth.getSession();
+  // const pathname = usePathname();
+  // let userVerified = true;
+  // const sent_from = pathname.substring(pathname.lastIndexOf("/") + 1);
+  // const { data: dataName, error } = await supabase
+  //   .from("stream")
+  //   .select("username")
+  //   .eq("stream_name", sent_from);
+  // if (dataName === undefined || error) {
+  //   userVerified = false;
+  // }
   return (
     <>
       <div

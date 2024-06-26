@@ -5,18 +5,46 @@ import { v4 as uuidv4 } from "uuid";
 import { useUser } from "@/store/user";
 import { Imessage, useMessage } from "@/store/messages";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 export default function ChatInput() {
   const addMessage = useMessage((state) => state.addMessage);
   const setOptimisticIds = useMessage((state) => state.setOptimisticIds);
   const user = useUser((state) => state.user);
   const messages = useMessage((state) => state);
-  let chatEnabled = true;
-  if (messages === null && user === null) {
-    chatEnabled = false;
-  }
   const pathname = usePathname();
   const sent_from = pathname.substring(pathname.lastIndexOf("/") + 1);
+  const [chatDisable, setChatDisable] = useState(true);
+  useEffect(() => {
+    const verifyName = async () => {
+      const { data: dataName, error } = await supabase
+        .from("stream")
+        .select("username")
+        .eq("username", sent_from)
+        .select();
+      if (
+        dataName === null ||
+        dataName.length === 0 ||
+        error !== null ||
+        user === undefined
+      ) {
+        console.log("in the hound");
+        setChatDisable(false);
+      }
+      console.log(
+        "Verify",
+        dataName,
+        error,
+        dataName === null,
+        dataName?.length === 0,
+        error !== null
+      );
+      console.log("chat1", chatDisable);
+    };
+    verifyName();
+    console.log("chat", chatDisable);
+  }, []);
   const supabase = createClient();
+
   const handleSendMessage = async (text: string) => {
     if (text.trim()) {
       const id = uuidv4();
@@ -51,11 +79,16 @@ export default function ChatInput() {
     <div className="p-5">
       <Input
         placeholder="send message"
-        disabled={chatEnabled}
+        disabled={!chatDisable}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
-            handleSendMessage(e.currentTarget.value);
-            e.currentTarget.value = "";
+            if (!chatDisable) {
+              console.log("no!");
+            } else {
+              console.log("?", chatDisable);
+              handleSendMessage(e.currentTarget.value);
+              e.currentTarget.value = "";
+            }
           }
         }}
       />

@@ -9,13 +9,11 @@ acceptLanguage.languages(languages);
 
 export async function middleware(req: NextRequest) {
   const elm = await updateSession(req);
-  console.log("middleware?", elm);
   const supabase = createClient();
   let reqPath = req.nextUrl.pathname;
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  console.log("middle user: ", user);
   if (user) {
     const { data, error } = await supabase
       .from("users")
