@@ -6,9 +6,14 @@ import { useUser } from "@/store/user";
 import { Imessage, useMessage } from "@/store/messages";
 import { usePathname } from "next/navigation";
 export default function ChatInput() {
-  const user = useUser((state) => state.user);
   const addMessage = useMessage((state) => state.addMessage);
   const setOptimisticIds = useMessage((state) => state.setOptimisticIds);
+  const user = useUser((state) => state.user);
+  const messages = useMessage((state) => state);
+  let chatEnabled = true;
+  if (messages === null && user === null) {
+    chatEnabled = false;
+  }
   const pathname = usePathname();
   const sent_from = pathname.substring(pathname.lastIndexOf("/") + 1);
   const supabase = createClient();
@@ -46,6 +51,7 @@ export default function ChatInput() {
     <div className="p-5">
       <Input
         placeholder="send message"
+        disabled={chatEnabled}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             handleSendMessage(e.currentTarget.value);

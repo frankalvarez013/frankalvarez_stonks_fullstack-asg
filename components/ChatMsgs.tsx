@@ -4,13 +4,18 @@ import Message from "./Message";
 import { useEffect, useRef } from "react";
 import { createClient } from "../utils/supabase/client";
 import { usePathname } from "next/navigation";
+import { useUser } from "@/store/user";
 export default function ChatMsgs() {
   const scrollRef = useRef() as React.MutableRefObject<HTMLDivElement>;
   const { messages, addMessage, optimisticIds } = useMessage((state) => state);
   const supabase = createClient();
   const pathnameList = usePathname();
   const pathname = pathnameList!.substring(pathnameList!.lastIndexOf("/") + 1);
-
+  const user = useUser((state) => state.user);
+  let chatEnabled = true;
+  if (messages === null && user === null) {
+    chatEnabled = false;
+  }
   console.log("Listing Channel Name: |" + pathname);
   console.log("messages: |" + messages);
 
@@ -70,6 +75,13 @@ export default function ChatMsgs() {
         {messages.map((value, index) => {
           return <Message key={index} message={value} />;
         })}
+        {chatEnabled ? (
+          <h1 className=" text-gray-500">
+            seems like there is no chat or streamer!
+          </h1>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );

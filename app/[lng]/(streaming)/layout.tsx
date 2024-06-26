@@ -29,7 +29,7 @@ export default function RootLayout({ children, params: { lng } }) {
     <html lang={lng} dir={dir(lng)} className={inter.className}>
       <body className="bg-background text-foreground">
         <main className="min-h-screen flex flex-col h-full">
-          <Header></Header>
+          <Header lng={lng}></Header>
           <SideBar></SideBar>
           <ChatBar></ChatBar>
           <div className="flex flex-1 ml-60 mr-80 mt-12 overflow-auto h-full p-4">

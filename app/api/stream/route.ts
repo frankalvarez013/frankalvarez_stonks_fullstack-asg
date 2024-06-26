@@ -5,6 +5,7 @@ const supabase = createClient();
 
 export async function POST(request) {
   try {
+    console.log("OI");
     const channel = supabase.channel("streamer_channel");
     const { error: subscribeError } = await channel.subscribe();
 
@@ -29,5 +30,4 @@ export async function POST(request) {
     console.error("Server error", error);
     return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
-  return NextResponse.json({ message: "Server error" }, { status: 500 });
 }

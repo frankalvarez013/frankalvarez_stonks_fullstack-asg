@@ -1,6 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import InitUser from "@/store/initUser";
 import Stream from "./Stream";
+import Link from "next/link";
 
 export default async function Streaming({
   params,
@@ -31,7 +32,22 @@ export default async function Streaming({
   });
   console.log("Main Page Streamer:", streamerInfo);
   if (!streamerInfo) {
-    <div>loading...</div>;
+    return (
+      <>
+        <div className="w-full flex flex-col gap-5 mt-20">
+          <h1 className="text-gray-500">
+            Seems like There is no account who has ever created a stream with
+            that name!
+          </h1>
+          <Link
+            className=" hover:underline hover:text-blue-400 cursor-pointer"
+            href={"/"}
+          >
+            Return Home
+          </Link>
+        </div>
+      </>
+    );
   } else {
     return (
       <>

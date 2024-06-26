@@ -26,6 +26,8 @@ export default function Stream({ StreamerInfo }) {
           <div className="text-sm">{StreamerInfo.username}</div>
         </div>
       </div>
+      {user ? <h1>bru</h1> : <h1>oi</h1>}
+      <h3>oiiii</h3>
       {isStreamer ? (
         <Switch StreamerInfo={StreamerInfo} />
       ) : (
