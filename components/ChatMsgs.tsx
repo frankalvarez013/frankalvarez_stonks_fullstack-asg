@@ -12,6 +12,7 @@ export default function ChatMsgs() {
   const pathname = pathnameList!.substring(pathnameList!.lastIndexOf("/") + 1);
 
   console.log("Listing Channel Name: |" + pathname);
+  console.log("messages: |" + messages);
 
   useEffect(() => {
     const channel = supabase
