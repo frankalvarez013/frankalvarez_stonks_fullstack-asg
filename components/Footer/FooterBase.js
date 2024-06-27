@@ -19,10 +19,6 @@ export const FooterBase = ({ t, lng }) => {
           );
         })}
       <br />
-
-      <Link href={`/${lng}/Frankie`}>{t("to-second-page")}</Link>
-      <br />
-      <Link href={`/${lng}/client-page`}>{t("to-client-page")}</Link>
     </footer>
   );
 };
