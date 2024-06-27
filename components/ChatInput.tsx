@@ -20,19 +20,21 @@ export default function ChatInput() {
         .from("stream")
         .select("username")
         .eq("username", sent_from)
-        .select();
+        .single();
       console.log("stream bruh", dataName);
       console.log("rip", user);
-      if (dataName === null || user === undefined) {
+      if (dataName === null && user === undefined) {
         console.log("huh");
         setChatDisable(true);
+      } else {
+        console.log(dataName, user, chatDisable);
       }
 
       // console.log("chat1", chatDisable);
     };
     verifyName();
     // console.log("chat", chatDisable);
-  }, [user]);
+  }, [user, sent_from]);
   const supabase = createClient();
 
   const handleSendMessage = async (text: string) => {
@@ -69,10 +71,10 @@ export default function ChatInput() {
     <div className="p-5">
       <Input
         placeholder="send message"
-        disabled={!chatDisable}
+        disabled={chatDisable}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
-            if (!chatDisable) {
+            if (chatDisable) {
               console.log("no!");
             } else {
               console.log("?", chatDisable);
