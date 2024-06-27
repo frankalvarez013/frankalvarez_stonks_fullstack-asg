@@ -4,13 +4,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 export default function SideBar() {
-  const isAuthenticated = true;
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   const supabase = createClient();
   const [followerStreams, setFollowerStreams] = useState([]);
   const [filteredPopularStreams, setFilteredPopularStreams] = useState([]);
+  const [popularStreamsTotal, setPopularStreamsTotal] = useState([]);
   useEffect(() => {
     const update = async () => {
       const { data } = await supabase.auth.getSession();
+      if (data.session?.user) {
+        setIsAuthenticated(true);
+      }
       const { data: followerStreams } = await supabase
         .from("stream")
         .select(`*,users (*)`)
@@ -20,6 +25,10 @@ export default function SideBar() {
         .from("stream")
         .select(`*,users (*)`)
         .neq("id", data.session?.user.id);
+      const { data: popularStreamsTotal } = await supabase
+        .from("stream")
+        .select(`*,users (*)`);
+      setPopularStreamsTotal(popularStreamsTotal);
       let filteredPopularStreams;
       // console.log("Hey!", followerStreams, popularStreams);
 
@@ -59,7 +68,7 @@ export default function SideBar() {
       aria-label="Sidebar"
     >
       <div className="h-full px-3 py-4 pt-8 overflow-y-auto flex flex-col gap-9 bg-[#FF9B0F]">
-        {isAuthenticated && (
+        {isAuthenticated ? (
           <div className="">
             <p className=" font-semibold ">Following</p>
             <ul className="space-y-2 font-medium">
@@ -92,36 +101,72 @@ export default function SideBar() {
               )}
             </ul>
           </div>
+        ) : (
+          ""
         )}
         <div>
           <p className=" font-semibold ">Popular Streamers</p>
           <ul className="space-y-2 font-medium">
-            {filteredPopularStreams && filteredPopularStreams.length > 0 ? (
-              filteredPopularStreams?.map((streamer) => (
-                <div>
-                  <li>
-                    <Link
-                      href={`/${streamer.username}`}
-                      className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100  group"
-                    >
-                      <Image
-                        src={streamer.users?.avatar_url!}
-                        alt={streamer.users?.name!}
-                        width={40}
-                        height={40}
-                        className="rounded-full"
-                      ></Image>
-                      <span className="ms-3 text-lg font-bold">
-                        {streamer.username}
-                      </span>
-                    </Link>
-                  </li>
-                </div>
-              ))
+            {isAuthenticated ? (
+              <>
+                {filteredPopularStreams && filteredPopularStreams.length > 0 ? (
+                  filteredPopularStreams?.map((streamer) => (
+                    <div>
+                      <li>
+                        <Link
+                          href={`/${streamer.username}`}
+                          className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100  group"
+                        >
+                          <Image
+                            src={streamer.users?.avatar_url!}
+                            alt={streamer.users?.name!}
+                            width={40}
+                            height={40}
+                            className="rounded-full"
+                          ></Image>
+                          <span className="ms-3 text-lg font-bold">
+                            {streamer.username}
+                          </span>
+                        </Link>
+                      </li>
+                    </div>
+                  ))
+                ) : (
+                  <p className=" text-sm font-medium text-gray-600">
+                    Looks like there are no streamers
+                  </p>
+                )}
+              </>
             ) : (
-              <p className=" text-sm font-medium text-gray-600">
-                Looks like there are no streamers
-              </p>
+              <>
+                {popularStreamsTotal && popularStreamsTotal.length > 0 ? (
+                  popularStreamsTotal?.map((streamer) => (
+                    <div>
+                      <li>
+                        <Link
+                          href={`/${streamer.username}`}
+                          className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100  group"
+                        >
+                          <Image
+                            src={streamer.users?.avatar_url!}
+                            alt={streamer.users?.name!}
+                            width={40}
+                            height={40}
+                            className="rounded-full"
+                          ></Image>
+                          <span className="ms-3 text-lg font-bold">
+                            {streamer.username}
+                          </span>
+                        </Link>
+                      </li>
+                    </div>
+                  ))
+                ) : (
+                  <p className=" text-sm font-medium text-gray-600">
+                    Looks like there are no streamers
+                  </p>
+                )}
+              </>
             )}
           </ul>
         </div>

@@ -8,6 +8,7 @@ import { useUser } from "@/store/user";
 export default function ChatMsgs() {
   const scrollRef = useRef() as React.MutableRefObject<HTMLDivElement>;
   const { messages, addMessage, optimisticIds } = useMessage((state) => state);
+  console.log("AAAAAAAAAAAAA", messages);
   const supabase = createClient();
   const pathnameList = usePathname();
   const pathname = pathnameList!.substring(pathnameList!.lastIndexOf("/") + 1);

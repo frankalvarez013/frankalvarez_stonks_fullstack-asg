@@ -10,10 +10,10 @@ export default function ChatInput() {
   const addMessage = useMessage((state) => state.addMessage);
   const setOptimisticIds = useMessage((state) => state.setOptimisticIds);
   const user = useUser((state) => state.user);
-  const messages = useMessage((state) => state);
+  console.log("HOOW", user);
   const pathname = usePathname();
   const sent_from = pathname.substring(pathname.lastIndexOf("/") + 1);
-  const [chatDisable, setChatDisable] = useState(true);
+  const [chatDisable, setChatDisable] = useState(false);
   useEffect(() => {
     const verifyName = async () => {
       const { data: dataName, error } = await supabase
@@ -21,20 +21,18 @@ export default function ChatInput() {
         .select("username")
         .eq("username", sent_from)
         .select();
-      if (
-        dataName === null ||
-        dataName.length === 0 ||
-        error !== null ||
-        user === undefined
-      ) {
-        setChatDisable(false);
+      console.log("stream bruh", dataName);
+      console.log("rip", user);
+      if (dataName === null || user === undefined) {
+        console.log("huh");
+        setChatDisable(true);
       }
 
       // console.log("chat1", chatDisable);
     };
     verifyName();
     // console.log("chat", chatDisable);
-  }, []);
+  }, [user]);
   const supabase = createClient();
 
   const handleSendMessage = async (text: string) => {

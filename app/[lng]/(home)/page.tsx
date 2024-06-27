@@ -19,12 +19,11 @@ export default async function Index({ params: { lng } }) {
   // if (error) {
   //   return <pre>Error fetching notes: {error.message}</pre>;
   // }
-  const { data: dataStreams, error } = await supabase
-    .from("stream")
-    .select(`*,users (*)`)
-    .neq("id", data.session?.user.id);
-  // console.log(dataStreams);
   if (data.session?.user) {
+    const { data: dataStreams, error } = await supabase
+      .from("stream")
+      .select(`*,users (*)`)
+      .neq("id", data.session?.user.id);
     return (
       <div className="w-full h-full">
         {/* <h1>{t("title")}</h1> */}
@@ -48,6 +47,9 @@ export default async function Index({ params: { lng } }) {
       </div>
     );
   } else {
+    const { data: dataStreams, error } = await supabase
+      .from("stream")
+      .select(`*,users (*)`);
     return (
       <div className="w-full h-full">
         {/* <h1>{t("title")}</h1> */}
@@ -64,7 +66,7 @@ export default async function Index({ params: { lng } }) {
           ></Image>
         </div>
         <div className="w-full">
-          <EmblaCarousel slides={SLIDES} options={OPTIONS} />
+          <EmblaCarousel slides={dataStreams} options={OPTIONS} />
         </div>
       </div>
     );

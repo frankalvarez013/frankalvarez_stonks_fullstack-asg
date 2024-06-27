@@ -35,8 +35,6 @@ export default async function Streaming({
     .select("followers")
     .eq("username", params.username)
     .single();
-  // console.log("bruh", stream);
-  // console.log("Main Page Streamer:", streamerInfo);
   if (!streamerInfo) {
     return (
       <>
