@@ -1,8 +1,7 @@
 import "../app/globals.css";
 import { dir } from "i18next";
 import { languages } from "../app/i18n/settings";
-import Header from "@/components/Header";
-import { Footer } from "@/components/Footer";
+import Header from "@/components/HeaderLive";
 import SideBar from "@/components/SideBar";
 import { Inter } from "next/font/google";
 import ChatBar from "./ChatSection";

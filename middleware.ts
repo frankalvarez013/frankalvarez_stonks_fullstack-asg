@@ -11,18 +11,33 @@ export async function middleware(req: NextRequest) {
   const elm = await updateSession(req);
   const supabase = createClient();
   let reqPath = req.nextUrl.pathname;
+  const dataUser = null;
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
+  let lng =
+    req.cookies.has(cookieName) && req.cookies.get(cookieName)?.value
+      ? acceptLanguage.get(req.cookies.get(cookieName)?.value)
+      : acceptLanguage.get(req.headers.get("Accept-Language")) || fallbackLng;
+
   if (user) {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("users")
       .select()
       .eq("id", user.id)
       .single();
+
+    if (error) {
+      console.error("Error fetching user:", error);
+      return NextResponse.error();
+    }
+
     if (data && !data.username) {
-      reqPath = "/SetUp";
+      const setupPath = `/${lng}/SetUp`;
+      if (!reqPath.startsWith(setupPath)) {
+        return NextResponse.redirect(new URL(setupPath, req.url));
+      }
     }
   }
 
@@ -32,11 +47,6 @@ export async function middleware(req: NextRequest) {
   const isNavigationRequest = req.method === "GET" && !req.url.includes(`code`);
   if (isNavigationRequest) {
     console.log("LINK OR HREF ENCOUNTERED...");
-
-    let lng =
-      req.cookies.has(cookieName) && req.cookies.get(cookieName)?.value
-        ? acceptLanguage.get(req.cookies.get(cookieName)?.value)
-        : acceptLanguage.get(req.headers.get("Accept-Language")) || fallbackLng;
 
     if (
       !languages.some((loc) => req.nextUrl.pathname.startsWith(`/${loc}`)) &&

@@ -21,13 +21,13 @@ export default function ChatInput() {
         .select("username")
         .eq("username", sent_from)
         .single();
-      console.log("stream bruh", dataName);
-      console.log("rip", user);
+      // console.log("stream bruh", dataName);
+      // console.log("rip", user);
       if (dataName === null && user === undefined) {
-        console.log("huh");
+        // console.log("huh");
         setChatDisable(true);
       } else {
-        console.log(dataName, user, chatDisable);
+        // console.log(dataName, user, chatDisable);
       }
 
       // console.log("chat1", chatDisable);
