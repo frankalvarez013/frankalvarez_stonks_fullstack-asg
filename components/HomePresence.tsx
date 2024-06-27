@@ -3,15 +3,35 @@ import { createClient } from "@/utils/supabase/client";
 import { useUser } from "@/store/user";
 import { useEffect, useState } from "react";
 import FollowDialog from "./FollowDialog";
+import { Resend } from "resend";
 export default function HomePresence() {
   const [isOpen, setIsOpen] = useState(false);
   const [notifUser, setNotifUser] = useState("");
   const supabase = createClient();
   const user = useUser((state) => state.user);
   console.log("In Presence");
-  const [onlineUser, setOnlineUser] = useState(0);
-
+  const [onlineUser, setOnlineUser] = useState<string[]>([]);
+  const [followers, setFollowers] = useState<string[]>([]);
   useEffect(() => {
+    const send = async (streamer) => {
+      const offlineFollowers = followers.filter(
+        (follower) => !onlineUser.includes(follower)
+      );
+      console.log("bout to call....");
+      try {
+        const responseStreamPost = await fetch("/api/sendEmail", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            offlineFollowers,
+          }),
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
     const channel = supabase.channel("streamer_channel");
     channel
       .on("presence", { event: "sync" }, () => {
@@ -21,7 +41,7 @@ export default function HomePresence() {
           // @ts-ignore
           userIds.push(channel.presenceState()[id][0].user_id);
         }
-        setOnlineUser([...new Set(userIds)].length);
+        setOnlineUser([...new Set(userIds)]);
       })
       .subscribe(async (status) => {
         if (status === "SUBSCRIBED") {
@@ -33,7 +53,7 @@ export default function HomePresence() {
       });
     channel.on("broadcast", { event: "streamer_online" }, (payload) => {
       console.log("This should hit!!!");
-      console.log(payload.payload.filter);
+      setFollowers(payload.payload.followers);
       const checkFollower = payload.payload.followers.filter(
         (follower) => follower === user?.id
       );
@@ -42,6 +62,7 @@ export default function HomePresence() {
         setIsOpen(true);
         setNotifUser(payload.payload.streamerName);
       }
+      send(payload.payload.streamerName);
     });
   }, [user]);
   if (!user) {

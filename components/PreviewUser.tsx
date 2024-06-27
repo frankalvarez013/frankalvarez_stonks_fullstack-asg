@@ -27,7 +27,7 @@ export default function PreviewUser({ stream }) {
           <div className="font-bold">{stream.title} </div>
           <div className="text-sm">{stream.username} </div>
           <div className="text-sm">
-            {stream.active ? <div>Online: </div> : <div></div>}
+            {stream.active ? <div>Online: 🟢</div> : <div>🔴 </div>}
           </div>
         </div>
       </div>
