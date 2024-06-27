@@ -34,12 +34,12 @@ export default function FollowDialog({ isOpen, setIsOpen, info }) {
               </DialogTitle>
               <p className="mt-2 text-sm/6 text-black">{info.description}</p>
               <div className="mt-4">
-                <Link
+                <a
                   className="inline-flex items-center gap-2 rounded-md bg-orange-500 hover:bg-orange-300 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
                   href={`${info.link}`}
                 >
                   {info.button}
-                </Link>
+                </a>
               </div>
             </DialogPanel>
           </div>

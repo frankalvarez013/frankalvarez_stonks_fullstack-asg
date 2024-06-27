@@ -6,12 +6,12 @@ export default function PreviewUser({ stream }) {
   console.log(stream);
   return (
     <div>
-      <Link
+      <a
         href={`/${stream.username}`}
         className="relative inline-block  bg-orange-600 "
       >
         <Thumbnail></Thumbnail>
-      </Link>
+      </a>
       <div className="flex items-center mt-2">
         <div className=" w-14">
           <Image

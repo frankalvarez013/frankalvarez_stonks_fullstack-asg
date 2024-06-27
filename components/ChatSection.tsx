@@ -20,7 +20,7 @@ export default async function ChatSection() {
   if (dataName === undefined || error) {
     userVerified = false;
   }
-  // console.log(dataName);
+  // console.log("works?", dataName, data.session?.user);
   return (
     <>
       <div

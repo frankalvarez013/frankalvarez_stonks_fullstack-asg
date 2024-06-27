@@ -76,8 +76,8 @@ export default function SideBar() {
                 followerStreams?.map((streamer) => (
                   <div>
                     <li>
-                      <Link
-                        href={`/${streamer.username}`}
+                      <a
+                        href={`${streamer.username}`}
                         className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100  group"
                       >
                         <Image
@@ -90,7 +90,7 @@ export default function SideBar() {
                         <span className="ms-3 text-sm font-medium text-gray-600">
                           {streamer.username}
                         </span>
-                      </Link>
+                      </a>
                     </li>
                   </div>
                 ))
@@ -113,7 +113,7 @@ export default function SideBar() {
                   filteredPopularStreams?.map((streamer) => (
                     <div>
                       <li>
-                        <Link
+                        <a
                           href={`/${streamer.username}`}
                           className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100  group"
                         >
@@ -127,7 +127,7 @@ export default function SideBar() {
                           <span className="ms-3 text-lg font-bold">
                             {streamer.username}
                           </span>
-                        </Link>
+                        </a>
                       </li>
                     </div>
                   ))
@@ -143,7 +143,7 @@ export default function SideBar() {
                   popularStreamsTotal?.map((streamer) => (
                     <div>
                       <li>
-                        <Link
+                        <a
                           href={`/${streamer.username}`}
                           className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100  group"
                         >
@@ -157,7 +157,7 @@ export default function SideBar() {
                           <span className="ms-3 text-lg font-bold">
                             {streamer.username}
                           </span>
-                        </Link>
+                        </a>
                       </li>
                     </div>
                   ))

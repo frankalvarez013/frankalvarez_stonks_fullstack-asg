@@ -6,7 +6,7 @@ export default function SendEmail({ name, link }) {
       <p>
         Your Streamer is online! <br></br> Here is the link to his stream!{" "}
         <br />
-        <Link href={`fsalvarez.com/${link}`}></Link>
+        <a href={`fsalvarez.com/${link}`}></a>
       </p>
     </div>
   );

@@ -43,12 +43,12 @@ export default async function Streaming({
             Seems like There is no account who has ever created a stream with
             that name!
           </h1>
-          <Link
+          <a
             className=" hover:underline hover:text-blue-400 cursor-pointer"
             href={"/"}
           >
             Return Home
-          </Link>
+          </a>
         </div>
       </>
     );

@@ -48,11 +48,9 @@ export async function middleware(req: NextRequest) {
   if (isNavigationRequest) {
     console.log("LINK OR HREF ENCOUNTERED...");
 
-    if (
-      !languages.some((loc) => req.nextUrl.pathname.startsWith(`/${loc}`)) &&
-      !req.nextUrl.pathname.startsWith("/_next")
-    ) {
-      return NextResponse.redirect(new URL(`/${lng}${reqPath}`, req.url));
+    if (!languages.some((loc) => req.nextUrl.pathname.startsWith(`/${loc}`))) {
+      console.log("does this ever trigger?");
+      return NextResponse.redirect(new URL(`/${lng}/${reqPath}`, req.url));
     }
 
     if (req.headers.has("referer")) {
@@ -88,7 +86,6 @@ export async function middleware(req: NextRequest) {
     return await updateSession(req);
   }
 }
-
 export const config = {
   matcher: [
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",

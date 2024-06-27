@@ -23,7 +23,7 @@ export default async function Header({ lng }) {
     <nav className="fixed w-full bg-bd-background bg-[#FF9B0F] flex justify-center h-12">
       <div className="w-full max-w-[115rem] flex justify-between items-center p-3 text-sm">
         <div className="py-2 font-bold px-3 flex rounded-md no-underline items-center gap-2">
-          <Link href={`/${lng}`} replace>
+          <a href={`/${lng}`} replace>
             <Image
               priority
               src={Logo}
@@ -31,17 +31,17 @@ export default async function Header({ lng }) {
               alt="Image of hand with moneybag"
               className=" hover:bg-white"
             ></Image>
-          </Link>
+          </a>
         </div>
         <div className="flex items-center gap-5">
           {streamButton ? (
-            <Link
+            <a
               width={45}
               className=" bg-green-200 p-2 rounded-full hover:bg-green-300"
               href={`/${lng}/${username?.username}`}
             >
               Go Live!
-            </Link>
+            </a>
           ) : (
             ""
           )}

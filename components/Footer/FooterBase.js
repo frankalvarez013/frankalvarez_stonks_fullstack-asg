@@ -14,7 +14,7 @@ export const FooterBase = ({ t, lng }) => {
           return (
             <span key={l}>
               {index > 0 && " or "}
-              <Link href={`/${l}`}>{l}</Link>
+              <a href={`/${l}`}>{l}</a>
             </span>
           );
         })}
