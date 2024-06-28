@@ -53,7 +53,7 @@ export default function EmojiSelection({ initialStream }) {
     }
   };
   return (
-    <div className="h-3/4 bg-white p-3 flex flex-col gap-10">
+    <div className=" bg-white p-3 flex flex-col sm:gap-10">
       <div className="text-bold text-xl">
         Add Emojis for your Users to use!!
       </div>

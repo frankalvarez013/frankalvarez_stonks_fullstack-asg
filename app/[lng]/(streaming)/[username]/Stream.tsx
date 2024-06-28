@@ -87,7 +87,7 @@ export default function Stream({ StreamerInfo, stream }) {
   }
 
   return (
-    <div className="flex flex-col w-full h-1/2 items-end justify-between gap-10 mt-2">
+    <div className="flex flex-col w-full h-1/2 items-end justify-between sm:gap-10 mt-2">
       <div className="flex flex-row justify-between items-center w-full">
         <div className="flex gap-2">
           <div className="w-14">
@@ -122,7 +122,7 @@ export default function Stream({ StreamerInfo, stream }) {
         )}
       </div>
       {isStreamer ? (
-        <div className="w-1/2 h-full">
+        <div className="sm:w-1/2 h-full">
           <EmojiSelection initialStream={stream}></EmojiSelection>
         </div>
       ) : (
