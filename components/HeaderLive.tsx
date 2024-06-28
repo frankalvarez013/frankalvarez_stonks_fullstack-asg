@@ -49,11 +49,10 @@ export default async function Header({ lng }) {
             <div>STREAMER WORLD</div>
           </a>
         </div>
-        <div className="flex items-center gap-5">
+        <div className="flex items-center justify-center gap-5">
           {streamButton ? (
             <a
-              width={45}
-              className=" bg-green-200 p-2 rounded-full hover:bg-green-300"
+              className=" bg-green-200 p-2 rounded-full hover:bg-green-300  sm:w-12 sm:h-14 md:h-12 md:w-12 text-xs m-auto"
               href={`/${lng}/${username?.username}`}
             >
               Go Live!
