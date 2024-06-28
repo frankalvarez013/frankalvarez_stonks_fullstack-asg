@@ -38,14 +38,27 @@ export default function Stream({ StreamerInfo, stream }) {
           throw error;
         }
 
+        const { data: dataUser, error: errorUser } = await supabase
+          .from("users")
+          .select("following")
+          .eq("id", user.id)
+          .single();
+        if (errorUser) {
+          throw errorUser;
+        }
+        const currentFollowing = dataUser.following || [];
         const currentFollowers = data.followers || [];
         let updatedFollowers = [];
-
+        let updatedFollowing = [];
         if (follow) {
           updatedFollowers = [...currentFollowers, user.id];
+          updatedFollowing = [...currentFollowing, StreamerInfo.username];
         } else {
           updatedFollowers = currentFollowers.filter(
             (followerId) => followerId !== user.id
+          );
+          updatedFollowing = currentFollowing.filter(
+            (followingId) => followingId !== StreamerInfo.id
           );
         }
 
@@ -53,6 +66,10 @@ export default function Stream({ StreamerInfo, stream }) {
           .from("stream")
           .update({ followers: updatedFollowers })
           .eq("username", StreamerInfo.username);
+        await supabase
+          .from("users")
+          .update({ following: updatedFollowing })
+          .eq("id", user.id);
       } catch (e) {
         console.error(e);
       }
@@ -96,6 +113,7 @@ export default function Stream({ StreamerInfo, stream }) {
                 } else {
                   setFollow((prevFollow) => !prevFollow);
                 }
+                location.reload();
               }}
             >
               {follow ? <h1>Unfollow</h1> : <h1>Follow</h1>}

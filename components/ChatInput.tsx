@@ -18,7 +18,6 @@ export default function ChatInput() {
   const sent_from = pathname.substring(pathname.lastIndexOf("/") + 1);
   const [chatDisable, setChatDisable] = useState(true);
   const [EmojiDisable, setEmojiDisable] = useState(true);
-
   const [message, setMessage] = useState("");
 
   let chat = true;
@@ -47,7 +46,6 @@ export default function ChatInput() {
     };
     verifyName();
   }, [user, sent_from, supabase]);
-
   const handleSendMessage = async (text: string) => {
     if (text.trim()) {
       const id = uuidv4();

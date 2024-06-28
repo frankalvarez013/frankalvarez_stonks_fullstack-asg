@@ -30,7 +30,8 @@ export default async function Index({ params: { lng } }) {
         {/* <pre>{JSON.stringify(notes, null, 2)}</pre> */}
         <div className="w-full flex h-1/2 justify-center flex-col lg:flex-row items-center lg:gap-10">
           <div className=" text-3xl lg:text-6xl text-zinc-700 flex items-center justify-center">
-            Investing Just <br /> Got Fun
+            {t("title")}
+            <br /> Got Fun
           </div>
           <Image
             src={Illustration}
@@ -56,7 +57,8 @@ export default async function Index({ params: { lng } }) {
         {/* <pre>{JSON.stringify(notes, null, 2)}</pre> */}
         <div className="w-full flex h-1/2 justify-center gap-10">
           <div className="text-6xl text-zinc-700 flex items-center justify-center">
-            Investing Just <br /> Got Fun
+            {t("title")}
+            <br /> Got Fun
           </div>
           <Image
             src={Illustration}

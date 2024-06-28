@@ -1,5 +1,7 @@
 import { createClient } from "@/utils/supabase/client";
 import { NextResponse } from "next/server";
+import { Resend } from "resend";
+import Email from "@/components/SendEmail";
 
 const supabase = createClient();
 
@@ -20,6 +22,32 @@ export async function POST(request) {
       event: "streamer_online",
       payload: { followers: body.followers, streamerName: body.streamerName },
     });
+    const { data: offlineFollowers, error } = await supabase
+      .from("users")
+      .select(`*`)
+      .contains("following", [body.streamerName])
+      .neq("online", true);
+    //also add followers that are online
+    console.log(offlineFollowers);
+    if (error) {
+      console.error("Error fetching offline followers:", error);
+    } else {
+      try {
+        const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_KEY);
+        await Promise.all(
+          offlineFollowers.map(async (follower) => {
+            const data = await resend.emails.send({
+              from: "frankalvarez@fsalvarez.com",
+              to: follower.email,
+              subject: `STONKS Assignment: ${body.streamerName} is Live!`,
+              react: <Email name={follower.name} link={body.streamerName} />,
+            });
+          })
+        );
+      } catch (error) {
+        console.error("error sending emails", error);
+      }
+    }
 
     if (sendError) {
       console.error("Error notifying users", sendError);

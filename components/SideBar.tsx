@@ -50,12 +50,6 @@ export default function SideBar() {
         }
       )
       .subscribe();
-    // const streamSubscription = supabase
-    //   .from("stream")
-    //   .on("*", (payload) => {
-    //     update(); // Re-fetch the data when a change occurs
-    //   })
-    //   .subscribe();
     update();
   }, []);
   return (
@@ -106,8 +100,8 @@ export default function SideBar() {
             {isAuthenticated ? (
               <>
                 {filteredPopularStreams && filteredPopularStreams.length > 0 ? (
-                  filteredPopularStreams?.map((streamer) => (
-                    <div>
+                  filteredPopularStreams?.map((streamer, key) => (
+                    <div key={key}>
                       <li>
                         <a
                           href={`/${streamer.username}`}
@@ -136,8 +130,8 @@ export default function SideBar() {
             ) : (
               <>
                 {popularStreamsTotal && popularStreamsTotal.length > 0 ? (
-                  popularStreamsTotal?.map((streamer) => (
-                    <div>
+                  popularStreamsTotal?.map((streamer, key) => (
+                    <div key={key}>
                       <li>
                         <a
                           href={`/${streamer.username}`}

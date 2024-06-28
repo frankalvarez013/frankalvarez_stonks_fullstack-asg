@@ -1,6 +1,7 @@
 import { Html, Button } from "@react-email/components";
 
 export function Email({ name, link }) {
+  console.log("email react", name, link);
   return (
     <Html>
       <h1>Hi, {name}!</h1>

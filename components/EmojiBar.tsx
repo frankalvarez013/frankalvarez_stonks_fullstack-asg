@@ -8,10 +8,10 @@ const EmojiBar = ({ message, setMessage }) => {
   const pathname = usePathname();
   const [username, setUsername] = useState("");
   const [emojis, setEmojis] = useState([]);
+  const supabase = createClient();
 
   useEffect(() => {
     const fetchData = async () => {
-      const supabase = createClient();
       const sent_from = pathname.substring(pathname.lastIndexOf("/") + 1);
 
       const { data: dataName, error } = await supabase
@@ -34,7 +34,28 @@ const EmojiBar = ({ message, setMessage }) => {
     };
 
     fetchData();
-  }, [pathname]);
+
+    const subscription = supabase
+      .channel("public:stream")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "stream" },
+        (payload) => {
+          if (payload.new?.username === username) {
+            const emojiArray = payload.new.emojis || [];
+            const emojifiedArray = emojiArray.map((emojiStr) =>
+              emoji.emojify(emojiStr)
+            );
+            setEmojis(emojifiedArray);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(subscription);
+    };
+  }, [pathname, username]);
 
   const handleEmojiClick = (e) => {
     const buttonEmoji = e?.currentTarget.textContent;
