@@ -112,8 +112,8 @@ export default function Stream({ StreamerInfo, stream }) {
                   setIsOpen(true);
                 } else {
                   setFollow((prevFollow) => !prevFollow);
+                  location.reload();
                 }
-                location.reload();
               }}
             >
               {follow ? <h1>Unfollow</h1> : <h1>Follow</h1>}
