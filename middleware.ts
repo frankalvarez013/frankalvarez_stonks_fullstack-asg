@@ -46,10 +46,7 @@ export async function middleware(req: NextRequest) {
 
   const isNavigationRequest = req.method === "GET" && !req.url.includes(`code`);
   if (isNavigationRequest) {
-    console.log("LINK OR HREF ENCOUNTERED...");
-
     if (!languages.some((loc) => req.nextUrl.pathname.startsWith(`/${loc}`))) {
-      console.log("does this ever trigger?");
       return NextResponse.redirect(new URL(`/${lng}/${reqPath}`, req.url));
     }
 
@@ -58,7 +55,6 @@ export async function middleware(req: NextRequest) {
       const lngInReferer = languages.find((l) =>
         refererUrl.pathname.startsWith(`/${l}`)
       );
-      console.log("Referer detected:", refererUrl.pathname);
 
       const response = NextResponse.next({
         request: {
@@ -71,10 +67,8 @@ export async function middleware(req: NextRequest) {
       }
       return response;
     } else {
-      console.log("No referer header present.");
     }
 
-    console.log("Refresh?");
     const response = NextResponse.next({
       request: {
         headers: requestHeaders,
@@ -82,7 +76,6 @@ export async function middleware(req: NextRequest) {
     });
     return response;
   } else {
-    console.log("Not a navigation request.");
     return await updateSession(req);
   }
 }

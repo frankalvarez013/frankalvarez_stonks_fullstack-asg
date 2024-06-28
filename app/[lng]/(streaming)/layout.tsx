@@ -10,7 +10,6 @@ const inter = Inter({
   subsets: ["latin"],
   display: "swap",
 });
-// console.log(inter);
 export async function generateStaticParams() {
   return languages.map((lng) => ({ lng }));
 }

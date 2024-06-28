@@ -28,7 +28,6 @@ const EmblaCarousel = (props) => {
       <div className="embla__viewport" ref={emblaRef}>
         <div className="embla__container">
           {slides.map((streamer, index) => {
-            // console.log("strema", streamer);
             return (
               <div className="embla__slide" key={index}>
                 <div className="embla__slide__number">

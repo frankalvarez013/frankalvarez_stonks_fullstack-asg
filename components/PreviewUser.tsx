@@ -3,7 +3,6 @@ import Image from "next/image";
 import defAvatar from "../public/defAvatar.svg";
 import Link from "next/link";
 export default function PreviewUser({ stream }) {
-  console.log(stream);
   return (
     <div>
       <a

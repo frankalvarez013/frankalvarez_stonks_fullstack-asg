@@ -6,6 +6,7 @@ import defAvatar from "../../../../public/defAvatar.svg";
 import Image from "next/image";
 import { createClient } from "@/utils/supabase/client";
 import FollowDialog from "@/components/FollowDialog";
+import EmojiSelection from "./EmojiSelection";
 
 export default function Stream({ StreamerInfo, stream }) {
   const [follow, setFollow] = useState(false);
@@ -69,34 +70,45 @@ export default function Stream({ StreamerInfo, stream }) {
   }
 
   return (
-    <div className="flex w-full items-center justify-between gap-2 mt-2">
-      <div className="flex gap-2">
-        <div className="w-14">
-          <Image alt="Avatar" src={defAvatar} />
+    <div className="flex flex-col w-full h-1/2 items-end justify-between gap-10 mt-2">
+      <div className="flex flex-row justify-between items-center w-full">
+        <div className="flex gap-2">
+          <div className="w-14">
+            <Image alt="Avatar" src={defAvatar} />
+          </div>
+          <div>
+            <div className="font-bold">{StreamerInfo.title || "My Stream"}</div>
+            <div className="text-sm">{StreamerInfo.username}</div>
+          </div>
         </div>
-        <div>
-          <div className="font-bold">{StreamerInfo.title || "My Stream"}</div>
-          <div className="text-sm">{StreamerInfo.username}</div>
-        </div>
-      </div>
 
+        {isStreamer ? (
+          <>
+            <Switch StreamerInfo={StreamerInfo} />
+          </>
+        ) : (
+          <div>
+            <button
+              className="py-2 px-2 rounded-3xl hover:cursor-pointer bg-orange-400 hover:bg-orange-200 hover:text-orange-400 text-orange-50"
+              onClick={() => {
+                if (!user || user === undefined) {
+                  setIsOpen(true);
+                } else {
+                  setFollow((prevFollow) => !prevFollow);
+                }
+              }}
+            >
+              {follow ? <h1>Unfollow</h1> : <h1>Follow</h1>}
+            </button>
+          </div>
+        )}
+      </div>
       {isStreamer ? (
-        <Switch StreamerInfo={StreamerInfo} />
-      ) : (
-        <div>
-          <button
-            className="py-2 px-2 rounded-3xl hover:cursor-pointer bg-orange-400 hover:bg-orange-200 hover:text-orange-400 text-orange-50"
-            onClick={() => {
-              if (!user || user === undefined) {
-                setIsOpen(true);
-              } else {
-                setFollow((prevFollow) => !prevFollow);
-              }
-            }}
-          >
-            {follow ? <h1>Unfollow</h1> : <h1>Follow</h1>}
-          </button>
+        <div className="w-1/2 h-full">
+          <EmojiSelection initialStream={stream}></EmojiSelection>
         </div>
+      ) : (
+        ""
       )}
       <FollowDialog
         isOpen={isOpen}

@@ -1,41 +1,61 @@
 "use client";
 import { createClient } from "@/utils/supabase/client";
 import { useUser } from "@/store/user";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import FollowDialog from "./FollowDialog";
-import { Resend } from "resend";
 export default function HomePresence() {
   const [isOpen, setIsOpen] = useState(false);
   const [notifUser, setNotifUser] = useState("");
   const supabase = createClient();
   const user = useUser((state) => state.user);
-  console.log("In Presence");
+  const [streamerName, setStreamerName] = useState("");
+
   const [onlineUser, setOnlineUser] = useState<string[]>([]);
   const [followers, setFollowers] = useState<string[]>([]);
+  const [sendEmail, setSendEmail] = useState(false);
+  const onlineUserRef = useRef(onlineUser);
+  const followersRef = useRef(followers);
+  const streamerNameRef = useRef(streamerName);
+  const sendEmailRef = useRef(sendEmail);
+
   useEffect(() => {
-    const send = async (streamer) => {
-      const offlineFollowers = followers.filter(
-        (follower) => !onlineUser.includes(follower)
-      );
-      console.log("bout to call....");
-      try {
-        const responseStreamPost = await fetch("/api/sendEmail", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            offlineFollowers,
-          }),
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    };
+    onlineUserRef.current = onlineUser;
+  }, [onlineUser]);
+  useEffect(() => {
+    followersRef.current = followers;
+    streamerNameRef.current = streamerName;
+  }, [followers, streamerName]);
+  useEffect(() => {
+    sendEmailRef.current = sendEmail;
+
+    send(streamerNameRef.current);
+  }, [sendEmail]);
+
+  const send = async (streamer) => {
+    const offlineFollowers = followersRef.current.filter(
+      (follower) => !onlineUserRef.current.includes(follower)
+    );
+
+    try {
+      const responseStreamPost = await fetch("/api/sendEmail", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          offlineFollowers,
+          streamerName: streamerNameRef.current,
+        }),
+      });
+      const res = responseStreamPost.json();
+    } catch (error) {
+      console.error("error sending emails", error);
+    }
+  };
+  useEffect(() => {
     const channel = supabase.channel("streamer_channel");
     channel
       .on("presence", { event: "sync" }, () => {
-        console.log("Synced presence state: ", channel.presenceState());
         const userIds = [];
         for (const id in channel.presenceState()) {
           // @ts-ignore
@@ -52,7 +72,6 @@ export default function HomePresence() {
         }
       });
     channel.on("broadcast", { event: "streamer_online" }, (payload) => {
-      console.log("This should hit!!!");
       setFollowers(payload.payload.followers);
       const checkFollower = payload.payload.followers.filter(
         (follower) => follower === user?.id
@@ -62,7 +81,8 @@ export default function HomePresence() {
         setIsOpen(true);
         setNotifUser(payload.payload.streamerName);
       }
-      send(payload.payload.streamerName);
+      setStreamerName(payload.payload.streamerName);
+      setSendEmail(!sendEmail);
     });
   }, [user]);
   if (!user) {

@@ -5,12 +5,11 @@ const supabase = createClient();
 
 export async function POST(request) {
   try {
-    console.log("API Hit!");
     console.error("lemme see");
     const channel = supabase.channel("streamer_channel");
     const body = await request.json();
     const { error: subscribeError } = await channel.subscribe();
-    console.log("body", body);
+
     if (subscribeError) {
       console.error("Subscription error", subscribeError);
       return NextResponse.json({ message: "failed" }, { status: 500 });

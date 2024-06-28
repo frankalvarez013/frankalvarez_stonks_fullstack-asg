@@ -6,16 +6,19 @@ import { useUser } from "@/store/user";
 import { Imessage, useMessage } from "@/store/messages";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import EmojiBar from "./EmojiBar";
 const supabase = createClient();
 
 export default function ChatInput() {
   const addMessage = useMessage((state) => state.addMessage);
   const setOptimisticIds = useMessage((state) => state.setOptimisticIds);
   const user = useUser((state) => state.user);
-  console.log("User:", user);
+
   const pathname = usePathname();
   const sent_from = pathname.substring(pathname.lastIndexOf("/") + 1);
   const [chatDisable, setChatDisable] = useState(true);
+  const [EmojiDisable, setEmojiDisable] = useState(true);
+
   const [message, setMessage] = useState("");
 
   let chat = true;
@@ -23,21 +26,26 @@ export default function ChatInput() {
     const verifyName = async () => {
       const { data: dataName, error } = await supabase
         .from("stream")
-        .select("username")
+        .select("*")
         .eq("username", sent_from)
         .single();
-      console.log("stream bruh", dataName);
-      console.log("rip", user);
+
       if (dataName !== null && user !== undefined) {
-        console.log("yes!");
         setChatDisable(false);
         chat = false;
+        const checkFollowing = dataName.followers?.filter(
+          (elem) => elem.localeCompare(user.id) === 0
+        );
+        if (
+          checkFollowing != undefined &&
+          (checkFollowing[0] || dataName.id.localeCompare(user.id) === 0)
+        ) {
+          setEmojiDisable(false);
+        }
       } else {
-        // console.log(dataName, user, chatDisable);
       }
     };
     verifyName();
-    console.log("chat in effect", chatDisable);
   }, [user, sent_from, supabase]);
 
   const handleSendMessage = async (text: string) => {
@@ -69,42 +77,48 @@ export default function ChatInput() {
       console.error("Message can not be empty!!");
     }
   };
-  console.log("chat outside", chatDisable, chat);
+
   return (
-    <div className="py-5 flex gap-2">
-      <Input
-        placeholder="send message"
-        className=""
-        disabled={chatDisable}
-        onChange={(e) => setMessage(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
+    <div>
+      <div className="py-5 flex gap-2">
+        <Input
+          placeholder="send message"
+          value={message}
+          className=""
+          disabled={chatDisable}
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              if (chatDisable) {
+                console.log("no!");
+              } else {
+                handleSendMessage(e.currentTarget.value);
+                e.currentTarget.value = "";
+              }
+            }
+          }}
+        />
+        <button
+          className={`p-2 rounded-full bg-white hover:bg-orange-600 ${
+            chatDisable ? "hover:bg-gray-400 bg-gray-400" : ""
+          }`}
+          disabled={chatDisable}
+          onClick={() => {
             if (chatDisable) {
               console.log("no!");
             } else {
-              console.log("?", chat);
-              handleSendMessage(e.currentTarget.value);
-              e.currentTarget.value = "";
+              handleSendMessage(message);
             }
-          }
-        }}
-      />
-      <button
-        className={`p-2 rounded-full bg-white hover:bg-orange-600 ${
-          chatDisable ? "hover:bg-gray-400 bg-gray-400" : ""
-        }`}
-        disabled={chatDisable}
-        onClick={() => {
-          if (chatDisable) {
-            console.log("no!");
-          } else {
-            console.log("?", chat);
-            handleSendMessage(message);
-          }
-        }}
-      >
-        Send
-      </button>
+          }}
+        >
+          Send
+        </button>
+      </div>
+      {EmojiDisable ? (
+        ""
+      ) : (
+        <EmojiBar message={message} setMessage={setMessage}></EmojiBar>
+      )}
     </div>
   );
 }

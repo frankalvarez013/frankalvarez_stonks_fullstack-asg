@@ -19,7 +19,5 @@ export default async function getChatMsg() {
         <InitMessages messages={data || []} />
       </Suspense>
     );
-  } catch (error) {
-    console.log("bozo", error);
-  }
+  } catch (error) {}
 }

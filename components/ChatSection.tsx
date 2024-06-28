@@ -7,12 +7,12 @@ export default async function ChatSection() {
   const supabase = createClient();
   const { data } = await supabase.auth.getSession();
   const headersList = headers();
-  // console.log("header?", Array.from(headersList.entries()));
+
   const pathname = headersList.get("x-pathname");
-  // console.log("hello?", pathname);
+
   let userVerified = true;
   const sent_from = pathname!.substring(pathname!.lastIndexOf("/") + 1);
-  // console.log(sent_from);
+
   const { data: dataName, error } = await supabase
     .from("stream")
     .select("username")
@@ -20,7 +20,7 @@ export default async function ChatSection() {
   if (dataName === undefined || error) {
     userVerified = false;
   }
-  // console.log("works?", dataName, data.session?.user);
+
   return (
     <>
       <div

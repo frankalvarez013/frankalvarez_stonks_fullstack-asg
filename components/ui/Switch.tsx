@@ -27,7 +27,6 @@ const Switch = ({ StreamerInfo }) => {
               (stream) => stream.username === StreamerInfo.username
             );
             if (getFollowers === undefined) {
-              console.log("no stream with the streamer username");
             } else {
               const responseStreamPost = await fetch("/api/stream", {
                 method: "POST",
@@ -41,7 +40,6 @@ const Switch = ({ StreamerInfo }) => {
               });
               const data = await responseStreamPost.json();
               if (responseStreamPost.ok) {
-                console.log("API call succeeded", data);
               } else {
                 console.error("API call failed:", data);
               }
@@ -66,7 +64,6 @@ const Switch = ({ StreamerInfo }) => {
 
         if (data) {
           const stream = data;
-          console.log("Stream data:", stream);
         }
       } catch (error) {
         console.error("Unexpected error:", error);

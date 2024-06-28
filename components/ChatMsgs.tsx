@@ -8,14 +8,14 @@ import { useUser } from "@/store/user";
 export default function ChatMsgs() {
   const scrollRef = useRef() as React.MutableRefObject<HTMLDivElement>;
   const { messages, addMessage, optimisticIds } = useMessage((state) => state);
-  // console.log("AAAAAAAAAAAAA", messages);
+
   const supabase = createClient();
   const pathnameList = usePathname();
   const pathname = pathnameList!.substring(pathnameList!.lastIndexOf("/") + 1);
   const user = useUser((state) => state.user);
   let chatEnabled = true;
   const [noMsgChat, setNoMsgChat] = useState(false);
-  // console.log("my messages should", messages);
+
   if (messages.length === 0 && user === null) {
     chatEnabled = false;
   }
@@ -26,8 +26,6 @@ export default function ChatMsgs() {
       setNoMsgChat(false);
     }
   }, [messages]);
-  console.log("Path" + pathname);
-  // console.log("messages: |" + messages);
 
   useEffect(() => {
     const channel = supabase
@@ -41,12 +39,10 @@ export default function ChatMsgs() {
         },
 
         async (payload) => {
-          // console.log("checking?");
           if (
             !optimisticIds.includes(payload.new.id) &&
             payload.new.sent_from === pathname
           ) {
-            // console.log("Change received!", payload);
             const { error, data } = await supabase
               .from("users")
               .select("*")

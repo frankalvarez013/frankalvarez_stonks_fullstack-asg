@@ -1,6 +1,8 @@
 import { Imessage } from "@/store/messages";
 import React from "react";
 import Image from "next/image";
+import * as emoji from "node-emoji";
+
 export default function Message({ message }: { message: Imessage }) {
   return (
     <div className="flex gap-2">
@@ -20,7 +22,7 @@ export default function Message({ message }: { message: Imessage }) {
             {new Date(message.created_at).toDateString()}
           </h1>
         </div>
-        <p className=" text-sm text-slate-800">{message.text}</p>
+        <p className=" text-sm text-slate-800">{emoji.emojify(message.text)}</p>
       </div>
     </div>
   );

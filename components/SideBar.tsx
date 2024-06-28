@@ -30,7 +30,6 @@ export default function SideBar() {
         .select(`*,users (*)`);
       setPopularStreamsTotal(popularStreamsTotal);
       let filteredPopularStreams;
-      // console.log("Hey!", followerStreams, popularStreams);
 
       if (followerStreams && popularStreams) {
         setFollowerStreams(followerStreams || []);
@@ -47,16 +46,13 @@ export default function SideBar() {
         "postgres_changes",
         { event: "*", schema: "public", table: "stream" },
         (payload) => {
-          // console.log("Change receivedddd!", payload);
           update();
-          // console.log(followerStreams, filteredPopularStreams);
         }
       )
       .subscribe();
     // const streamSubscription = supabase
     //   .from("stream")
     //   .on("*", (payload) => {
-    //     console.log("Change received!", payload);
     //     update(); // Re-fetch the data when a change occurs
     //   })
     //   .subscribe();
@@ -73,8 +69,8 @@ export default function SideBar() {
             <p className=" font-semibold ">Following</p>
             <ul className="space-y-2 font-medium">
               {followerStreams && followerStreams.length > 0 ? (
-                followerStreams?.map((streamer) => (
-                  <div>
+                followerStreams?.map((streamer, index) => (
+                  <div key={index}>
                     <li>
                       <a
                         href={`${streamer.username}`}

@@ -1,13 +1,21 @@
-import Link from "next/link";
-export default function SendEmail({ name, link }) {
+import { Html, Button } from "@react-email/components";
+
+export function Email({ name, link }) {
   return (
-    <div>
+    <Html>
       <h1>Hi, {name}!</h1>
       <p>
-        Your Streamer is online! <br></br> Here is the link to his stream!{" "}
+        Your Streamer is online! <br></br> Here is the link to his stream!
         <br />
-        <a href={`fsalvarez.com/${link}`}></a>
+        <Button
+          style={{ background: "#000", color: "#fff", padding: "12px 20px" }}
+          href={`${process.env.NEXT_PUBLIC_HOST_URL}/${link}`}
+        >
+          Join Live
+        </Button>
       </p>
-    </div>
+    </Html>
   );
 }
+
+export default Email;

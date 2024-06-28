@@ -2,7 +2,7 @@ import { createClient } from "@/utils/supabase/server";
 import InitUser from "@/store/initUser";
 import Stream from "./Stream";
 import Link from "next/link";
-
+import HomePresence from "@/components/HomePresence";
 export default async function Streaming({
   params,
 }: {
@@ -32,7 +32,7 @@ export default async function Streaming({
   });
   const { data: stream } = await supabase
     .from("stream")
-    .select("followers")
+    .select("*")
     .eq("username", params.username)
     .single();
   if (!streamerInfo) {
@@ -65,7 +65,10 @@ export default async function Streaming({
           <Stream StreamerInfo={streamerInfo} stream={stream}></Stream>
         </div>
         {data.session?.user ? (
-          <InitUser user={data.session?.user}></InitUser>
+          <div>
+            <InitUser user={data.session?.user}></InitUser>
+            <HomePresence />
+          </div>
         ) : (
           <></>
         )}

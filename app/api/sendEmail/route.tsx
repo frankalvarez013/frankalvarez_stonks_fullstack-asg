@@ -1,20 +1,18 @@
 import { createClient } from "@/utils/supabase/client";
 import { NextResponse } from "next/server";
-import SendEmail from "@/components/sendEmail";
+import Email from "@/components/SendEmail";
 import { Resend } from "resend";
 
 const supabase = createClient();
 
 export async function POST(request: Request) {
-  console.log("CALLED");
   const body = await request.json();
-  console.log("offline followers:", body.offlineFollowers);
-  console.log("key", process.env.NEXT_PUBLIC_RESEND_KEY);
+
   const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_KEY);
+
   try {
     await Promise.all(
       body.offlineFollowers.map(async (followerId: string) => {
-        console.log("Inside:", followerId);
         const { data: follower, error } = await supabase
           .from("users")
           .select("*")
@@ -26,28 +24,16 @@ export async function POST(request: Request) {
           return;
         }
 
-        await resend.emails.send({
-          from: "frankalvarez475@gmail.com",
+        const data = await resend.emails.send({
+          from: "frankalvarez@fsalvarez.com",
           to: follower.email,
-          subject: "hello world",
-          text: "it works",
+          subject: `STONKS Assignment: ${body.streamerName} is Live!`,
+          react: <Email name={follower.name} link={body.streamerName} />,
         });
       })
     );
   } catch (error) {
-    console.error(error);
+    console.error("ERROR", error);
   }
-
-  try {
-    await resend.emails.send({
-      from: "frankalvarez475@gmail.com",
-      to: "frankalvarez475@gmail.com",
-      subject: "hello world",
-      text: "it works",
-    });
-  } catch (e) {
-    console.error("rip", e);
-  }
-
   return NextResponse.json({ status: "Emails sent" });
 }
