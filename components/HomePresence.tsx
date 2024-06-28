@@ -20,7 +20,6 @@ export default function HomePresence() {
 
   useEffect(() => {
     onlineUserRef.current = onlineUser;
-    console.log("Updating OnlineUsersRef...", onlineUserRef.current);
   }, [onlineUser]);
 
   useEffect(() => {
@@ -33,7 +32,6 @@ export default function HomePresence() {
   //   send(streamerNameRef.current);
   // }, [sendEmail]);
   const updateUser = async (userId, checkOnline: boolean) => {
-    console.log("Fetching Update Command...: into:", checkOnline);
     try {
       const response = await fetch("/api/user", {
         method: "PATCH",
@@ -49,7 +47,6 @@ export default function HomePresence() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      console.log("Update response: ", data);
     } catch (error) {
       console.error("User Update Error: ", error);
     }
@@ -81,11 +78,10 @@ export default function HomePresence() {
     channel
       .on("presence", { event: "sync" }, () => {
         const userIds = [];
-        // console.log("user stat", userStatusRef.current);
+
         for (const id in channel.presenceState()) {
           // @ts-ignore
           userIds.push(channel.presenceState()[id][0].user_id);
-          // console.log("Synced presence state: ", channel.presenceState());
         }
         setOnlineUser([userIds]);
       })
@@ -98,24 +94,18 @@ export default function HomePresence() {
         }
       });
     channel.on("presence", { event: "join" }, ({ key, newPresences }) => {
-      console.log("joining!!!");
-      console.log("join", key, newPresences);
-      console.log("JOINNGINGINgiNgINGing");
       updateUser(newPresences[0].user_id, true);
     });
     channel.on("presence", { event: "leave" }, ({ leftPresences }) => {
-      console.log("Users: ", onlineUserRef.current[0]);
       const checkOffline = onlineUserRef.current[0].filter((onlineUser) => {
         return onlineUser.localeCompare(leftPresences[0].user_id) === 0;
       });
 
       if (checkOffline.length <= 1) {
-        console.log("OFFLINE");
         userStatusRef.current = false;
-        console.log("Removing Fool from Online!!", leftPresences[0].user_id);
+
         updateUser(leftPresences[0].user_id, false);
       } else {
-        console.log("ONLINE WITH ITS OWN LINKS - ", checkOffline);
       }
     });
     channel.on("broadcast", { event: "streamer_online" }, (payload) => {
@@ -133,13 +123,6 @@ export default function HomePresence() {
     });
   }, [user]);
 
-  // useEffect(() => {
-  //   console.log("User Status Changed...");
-  //   if (!user || !user.id) return;
-  //   onlineUserRef.current = onlineUser;
-  //   updateUser(userStatusRef.current);
-  //   console.log("Online Status Updated!!");
-  // }, [user]);
   if (!user) {
     return <></>;
   }

@@ -88,7 +88,6 @@ export default function ChatInput() {
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               if (chatDisable) {
-                console.log("no!");
               } else {
                 handleSendMessage(e.currentTarget.value);
                 e.currentTarget.value = "";
@@ -103,7 +102,6 @@ export default function ChatInput() {
           disabled={chatDisable}
           onClick={() => {
             if (chatDisable) {
-              console.log("no!");
             } else {
               handleSendMessage(message);
             }

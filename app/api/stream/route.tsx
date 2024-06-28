@@ -28,7 +28,7 @@ export async function POST(request) {
       .contains("following", [body.streamerName])
       .neq("online", true);
     //also add followers that are online
-    console.log(offlineFollowers);
+
     if (error) {
       console.error("Error fetching offline followers:", error);
     } else {
