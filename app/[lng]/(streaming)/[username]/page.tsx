@@ -70,7 +70,7 @@ export default async function Streaming({
             <HomePresence />
           </div>
         ) : (
-          <></>
+          ""
         )}
       </>
     );
