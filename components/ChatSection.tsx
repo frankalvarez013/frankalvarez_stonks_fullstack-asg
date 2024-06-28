@@ -24,7 +24,7 @@ export default async function ChatSection() {
   return (
     <>
       <div
-        className="fixed lg:top-12 sm:right-0 z-40 sm:w-80 w-full h-1/2 bottom-0 sm:h-screen transition-transform  translate-x-0"
+        className="fixed sm:top-12 sm:right-0 z-40 sm:w-80 w-full h-1/3 bottom-0 sm:h-screen transition-transform  translate-x-0"
         aria-label="Sidebar"
       >
         <div className="h-full w-full px-3 py-4 overflow-y-auto  bg-[#FF9B0F]">
